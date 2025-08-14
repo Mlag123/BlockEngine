@@ -31,17 +31,28 @@ public class GameLoop {
 
     public void loop(){
         GL.createCapabilities();
+        Texture texture = new Texture("resources/textures/boykisser.jpg");
+        Shader shader  = new Shader("resources/shaders/vertex.vert","resources/shaders/fragment.frag");
         Square square = new Square();
         square.init();
+        float[] vertices = {
+                -1.0f, -1.0f, // левый нижний
+                1.0f, -1.0f, // правый нижний
+                -1.0f,  1.0f, // левый верхний
+                1.0f,  1.0f  // правый верхний
+        };
 
         log.info("started gameloop");
 
        // glClearColor(1.0f,0.0f,0.0f,0.0f);
         while(!glfwWindowShouldClose(window)){
-            glClear(GL_COLOR_BUFFER_BIT);
-            glColor3f(0.5f,0.0f,0.0f);
+            glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        //    glColor3f(0.5f,0.0f,0.0f);
             // Отрисовка квадрата
 
+
+            shader.use();
+            texture.bind();
 
             square.draw();
 
