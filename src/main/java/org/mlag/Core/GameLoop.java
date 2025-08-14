@@ -3,11 +3,15 @@ package org.mlag.Core;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
+import org.mlag.Shapes.Square;
+import org.mlag.ljwgl.VAO;
+import org.mlag.ljwgl.VBO;
 
 import static java.sql.Types.NULL;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
+//import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL11C.GL_DEPTH_BUFFER_BIT;
 
@@ -24,23 +28,23 @@ public class GameLoop {
         }
     }
 
+
     public void loop(){
-
-        float vertices[] = {
-                -0.5f,-0,5f,0.f,
-                0.5f,-0.5f,0.0f,
-                0.0f,0.5f,0.0f
-        };
-
+        GL.createCapabilities();
+        Square square = new Square();
+        square.init();
 
         log.info("started gameloop");
-        GL.createCapabilities();
-        glClearColor(1.0f,0.0f,0.0f,0.0f);
-        while(!glfwWindowShouldClose(window)){
-            glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-            glBegin(GL_TRIANGLES);
 
-            glEnd();
+       // glClearColor(1.0f,0.0f,0.0f,0.0f);
+        while(!glfwWindowShouldClose(window)){
+            glClear(GL_COLOR_BUFFER_BIT);
+            glColor3f(0.5f,0.0f,0.0f);
+            // Отрисовка квадрата
+
+
+            square.draw();
+
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
