@@ -12,3 +12,6 @@
 2025-08-12 21:57:44 [main] INFO  org.mlag.Core.Window - Helo LJWGL 3.3.6+1!
 2025-08-12 21:57:45 [main] INFO  org.mlag.Core.Window - windows id = 1862822720
 2025-08-12 21:57:45 [main] INFO  org.mlag.Core.GameLoop - started gameloop
+2025-08-12 22:28:55 [main] INFO  org.mlag.Core.Window - Helo LJWGL 3.3.6+1!
+2025-08-12 22:28:55 [main] INFO  org.mlag.Core.Window - windows id = 1999637920
+2025-08-12 22:28:55 [main] INFO  org.mlag.Core.GameLoop - started gameloop

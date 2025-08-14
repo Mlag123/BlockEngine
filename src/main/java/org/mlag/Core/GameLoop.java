@@ -6,6 +6,8 @@ import org.lwjgl.opengl.GL;
 
 import static java.sql.Types.NULL;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL11C.GL_DEPTH_BUFFER_BIT;
 
@@ -23,11 +25,22 @@ public class GameLoop {
     }
 
     public void loop(){
+
+        float vertices[] = {
+                -0.5f,-0,5f,0.f,
+                0.5f,-0.5f,0.0f,
+                0.0f,0.5f,0.0f
+        };
+
+
         log.info("started gameloop");
         GL.createCapabilities();
         glClearColor(1.0f,0.0f,0.0f,0.0f);
         while(!glfwWindowShouldClose(window)){
             glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+            glBegin(GL_TRIANGLES);
+
+            glEnd();
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
