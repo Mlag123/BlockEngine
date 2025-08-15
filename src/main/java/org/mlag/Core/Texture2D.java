@@ -3,8 +3,6 @@ package org.mlag.Core;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.swing.plaf.PanelUI;
-import java.awt.font.FontRenderContext;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11C.*;
@@ -12,13 +10,17 @@ import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.stb.STBImage.stbi_image_free;
 import static org.lwjgl.stb.STBImage.stbi_load;
 
-public class Texture {
+public class Texture2D {
     private final Logger log = LogManager.getLogger(this.getClass());
 
     private int id;
 
 
-    public Texture(String pathTexture) {
+    public Texture2D(String pathTexture) {
+        if (!glGetBoolean(GL_TEXTURE_2D)) {
+            throw new RuntimeException("Texture 2D not supported");
+        }
+
         id = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, id);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

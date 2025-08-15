@@ -4,14 +4,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
 import org.mlag.Shapes.Square;
-import org.mlag.ljwgl.VAO;
-import org.mlag.ljwgl.VBO;
 
 import static java.sql.Types.NULL;
 import static org.lwjgl.glfw.GLFW.*;
 //import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL11C.GL_DEPTH_BUFFER_BIT;
 
@@ -31,7 +28,7 @@ public class GameLoop {
 
     public void loop(){
         GL.createCapabilities();
-        Texture texture = new Texture("resources/textures/boykisser.jpg");
+        Texture2D texture2D = new Texture2D("resources/textures/boykisser.png");
         Shader shader  = new Shader("resources/shaders/vertex.vert","resources/shaders/fragment.frag");
         Square square = new Square();
         square.init();
@@ -52,7 +49,7 @@ public class GameLoop {
 
 
             shader.use();
-            texture.bind();
+           // texture.bind();
 
             square.draw();
 
