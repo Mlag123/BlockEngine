@@ -7,7 +7,7 @@ public class Square {
 
     private VAO vao;
     private VBO vbo;
-    float[] sqVertices = {
+    float[] sqVertices = { //fixme
             // Первый треугольник
             -1.0f,  1.0f, 0.0f,  // верхний левый
             1.0f,  1.0f, 0.0f,   // верхний правый
@@ -26,6 +26,8 @@ public class Square {
     public void init(){
         vbo.uploadData(sqVertices);
         vao.linkVBO(vbo,0,3,0,0);
+        vao.linkVBO(vbo, 1, 2, 5 * Float.BYTES, 3 * Float.BYTES); //fixme
+
         vao.setVertexCount(6);
 
     }
