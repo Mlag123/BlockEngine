@@ -54,6 +54,9 @@ public class Window {
         if(window == NULL){
             throw  new RuntimeException("Failed create window");
         }
+
+
+        //nnn
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop

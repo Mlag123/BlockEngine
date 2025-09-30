@@ -48,22 +48,26 @@ public class GameLoop {
         Camera camera = new Camera(60f,800f/600f,0.1f,100f,2,2,2);
         MouseInput mouseInput = new MouseInput();
         mouseInput.attachToWindow(window);
-        Shader cubeShader = new Shader("resources/shaders/CubeVertex.vert", "resources/shaders/CubeFrag.frag");
-        Cube cube = new Cube(cubeShader);
+        Shader cubeShaderRainbow = new Shader("resources/shaders/CubeVertex.vert", "resources/shaders/CubeFrag.frag");
+        Shader staticShader = new Shader("resources/shaders/CubeVertexBlue.vert", "resources/shaders/CubeFragBlue.frag");
+        Cube RainbowCube = new Cube(cubeShaderRainbow);
         glEnable(GL_DEPTH_TEST);
         camera.translate(1,0,0);
 
-        Cube cube1 = new Cube(cubeShader);
+        Cube staticCube = new Cube(staticShader);
    //     glActiveTexture(GL_TEXTURE0);
-        cube1.setPosition(2,2,2);
+        staticCube.setPosition(2,2,2);
+        staticCube.setScale(100);
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             TIME = (float)glfwGetTime();
+            log.info(TIME);
             //   glColor3f(0.5f,0.0f,0.0f);
             // Отрисовка квадрата
             mouseInput.resetDeltas();
             glfwPollEvents();
-            cubeShader.setUniform1f("time",TIME);
+
+        //    cubeAIR.setUniform1f("time",TIME);
             camera.rotate(mouseInput.getDeltaX()*0.1f,mouseInput.getDeltaY()*0.1f);
 
 
@@ -78,8 +82,13 @@ public class GameLoop {
             if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) camera.move(0,speed,0);
             if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) camera.move(0,-speed,0);
             //код выносим за gameLoop!!
-            cube.render(camera.getViewMatrix(),camera.getProjectionMatrix(),fb);
-            cube1.render(camera.getViewMatrix(),camera.getProjectionMatrix(),fb);
+            cubeShaderRainbow.use();
+            cubeShaderRainbow.setUniform1f("time",TIME);
+            RainbowCube.render(camera.getViewMatrix(),camera.getProjectionMatrix(),fb);
+
+
+            staticShader.use();
+            staticCube.render(camera.getViewMatrix(),camera.getProjectionMatrix(),fb);
 
             // texture2D.bind();
 
