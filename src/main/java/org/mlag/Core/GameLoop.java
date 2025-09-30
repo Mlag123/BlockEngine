@@ -62,6 +62,7 @@ public class GameLoop {
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
+        MemoryUtil.memFree(fb);
 
     }
 
