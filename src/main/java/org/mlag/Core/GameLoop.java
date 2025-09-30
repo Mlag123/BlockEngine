@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 import org.mlag.Input.MouseInput;
 import org.mlag.Shapes.Cube;
+import org.mlag.Shapes.Place;
 import org.mlag.Shapes.Square;
 import org.joml.Matrix4f;
 
@@ -56,8 +57,14 @@ public class GameLoop {
 
         Cube staticCube = new Cube(staticShader);
    //     glActiveTexture(GL_TEXTURE0);
+
+        Shader placeShader = new Shader("resources/shaders/PlaceVert.vert", "resources/shaders/PlaceFrag.frag");
+        Place place = new Place(placeShader);
+
         staticCube.setPosition(2,2,2);
         staticCube.setScale(100);
+        place.setScale(20);
+        place.setPosition(-1,-1,-1);
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             TIME = (float)glfwGetTime();
@@ -66,6 +73,7 @@ public class GameLoop {
             // Отрисовка квадрата
             mouseInput.resetDeltas();
             glfwPollEvents();
+
 
         //    cubeAIR.setUniform1f("time",TIME);
             camera.rotate(mouseInput.getDeltaX()*0.1f,mouseInput.getDeltaY()*0.1f);
@@ -86,9 +94,11 @@ public class GameLoop {
             cubeShaderRainbow.setUniform1f("time",TIME);
             RainbowCube.render(camera.getViewMatrix(),camera.getProjectionMatrix(),fb);
 
+            placeShader.use();
+            placeShader.setUniform1f("time",TIME);
+            place.render(camera.getViewMatrix(),camera.getProjectionMatrix(),fb);
 
-            staticShader.use();
-            staticCube.render(camera.getViewMatrix(),camera.getProjectionMatrix(),fb);
+
 
             // texture2D.bind();
 
