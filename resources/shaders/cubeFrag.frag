@@ -3,8 +3,15 @@
 in vec3 vertexPos;
 out vec4 FragColor;
 
+uniform float time;
+
 void main() {
-    // градиент от синего (низу) к красному (верху)
-    float t = (vertexPos.y + 0.5); // нормируем Y: [-0.5..0.5] → [0..1]
-    FragColor = vec4(t, 0.0, 1.0 - t, 1.0);
+    float t = vertexPos.y + 0.5; // [0..1] по высоте
+
+    // Радуга с анимацией
+    float r = 0.5 + 0.5 * sin(6.2831 * (t + time));
+    float g = 0.5 + 0.5 * sin(6.2831 * (t + time + 0.33));
+    float b = 0.5 + 0.5 * sin(6.2831 * (t + time + 0.66));
+
+    FragColor = vec4(r, g, b, 1.0);
 }

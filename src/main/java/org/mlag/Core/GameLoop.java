@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
+import org.mlag.Input.MouseInput;
 import org.mlag.Shapes.Cube;
 import org.mlag.Shapes.Square;
 import org.joml.Matrix4f;
@@ -44,15 +45,22 @@ public class GameLoop {
     public void loop() {
         FloatBuffer fb = MemoryUtil.memAllocFloat(16);
         Camera camera = new Camera(60f,800f/600f,0.1f,100f,2,2,2);
+        MouseInput mouseInput = new MouseInput();
+        mouseInput.attachToWindow(window);
         Shader cubeShader = new Shader("resources/shaders/CubeVertex.vert", "resources/shaders/CubeFrag.frag");
         Cube cube = new Cube(cubeShader);
         glEnable(GL_DEPTH_TEST);
+        camera.translate(1,0,0);
    //     glActiveTexture(GL_TEXTURE0);
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             //   glColor3f(0.5f,0.0f,0.0f);
             // Отрисовка квадрата
+            mouseInput.resetDeltas();
+            glfwPollEvents();
+            cubeShader.setUniform1f("time",(float)(glfwGetTime())/2);
+            camera.rotate(mouseInput.getDeltaX()*0.1f,mouseInput.getDeltaY()*0.1f);
 
             cube.render(camera.getViewMatrix(),camera.getProjectionMatrix(),fb);
 
@@ -60,7 +68,6 @@ public class GameLoop {
 
 
             glfwSwapBuffers(window);
-            glfwPollEvents();
         }
         MemoryUtil.memFree(fb);
 
