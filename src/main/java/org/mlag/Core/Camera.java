@@ -54,5 +54,28 @@ public class Camera {
     public void setPosition(Vector3f pos) { position.set(pos); updateViewMatrix(); }
     public void translate(float x,float y,float z){viewMatrix.translate(x,y,z);}
     public void rotate(float angle,float ax,float ay,float az){viewMatrix.rotate(angle,ax,ay,az);}
+    public void move(float dx, float dy, float dz) {
+        Vector3f front = new Vector3f(
+                (float)Math.cos(Math.toRadians(pitch)) * (float)Math.cos(Math.toRadians(yaw)),
+                (float)Math.sin(Math.toRadians(pitch)),
+                (float)Math.cos(Math.toRadians(pitch)) * (float)Math.sin(Math.toRadians(yaw))
+        );
+
+        front.normalize();
+
+        Vector3f right = new Vector3f();
+        front.cross(new Vector3f(0,1,0), right).normalize();
+
+        Vector3f up = new Vector3f(0,1,0);
+
+        Vector3f moveVec = new Vector3f();
+        moveVec.fma(dx, right); // moveVec += dx * right
+        moveVec.fma(dy, up);    // moveVec += dy * up
+        moveVec.fma(dz, front); // moveVec += dz * front
+
+        position.add(moveVec);
+
+        updateViewMatrix();
+    }
 
 }

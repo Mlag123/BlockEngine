@@ -24,6 +24,7 @@ public class GameLoop {
 
     private long window = 0;
     private final Logger log = LogManager.getLogger(this.getClass());
+    private float TIME = 0;
 
     public GameLoop(long window) {
         this.window = window;
@@ -55,13 +56,26 @@ public class GameLoop {
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            TIME = (float)glfwGetTime();
             //   glColor3f(0.5f,0.0f,0.0f);
             // Отрисовка квадрата
             mouseInput.resetDeltas();
             glfwPollEvents();
-            cubeShader.setUniform1f("time",(float)(glfwGetTime())/2);
+            cubeShader.setUniform1f("time",TIME);
             camera.rotate(mouseInput.getDeltaX()*0.1f,mouseInput.getDeltaY()*0.1f);
 
+
+            float speed = 0.05f;
+
+
+            //код выносим за gameLoop!!
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.move(0,0,speed);
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.move(0,0,-speed);
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.move(-speed,0,0);
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.move(speed,0,0);
+            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) camera.move(0,speed,0);
+            if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) camera.move(0,-speed,0);
+            //код выносим за gameLoop!!
             cube.render(camera.getViewMatrix(),camera.getProjectionMatrix(),fb);
 
             // texture2D.bind();
