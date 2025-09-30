@@ -21,6 +21,8 @@ public class Cube {
         this.shader = shader;
         modelMatrix = new Matrix4f().identity() ;
         setupMesh();
+
+
     }
 
     private void setupMesh(){
@@ -82,8 +84,14 @@ public class Cube {
     }
 
     public void translate(float x,float y,float z){
-        modelMatrix.translate(x,y,z);
+       // modelMatrix.translate(x,y,z);
+        position[0] +=x;
+        position[1] +=y;
+        position[2]+=z;
+        updateModelMatrix();
     }
+
+
     public void rotate(float angle,float ax,float ay,float az){
         modelMatrix.rotate((float) Math.toRadians(angle),ax,ay,az);
     }
@@ -100,15 +108,29 @@ public class Cube {
         position[0] = x;
         position[1] = y;
         position[2] = z;
+        updateModelMatrix();
+ //       modelMatrix.identity().translate(x,y,z).scale(scale);
     }
+
+    public void updateModelMatrix() {
+        modelMatrix.identity()
+                .translate(position[0], position[1], position[2])
+                .rotateX((float)Math.toRadians(rotation[0]))
+                .rotateY((float)Math.toRadians(rotation[1]))
+                .rotateZ((float)Math.toRadians(rotation[2]))
+                .scale(scale);
+    }
+
     public void rotate(float rx, float ry, float rz) {
         rotation[0] += rx;
         rotation[1] += ry;
         rotation[2] += rz;
+        updateModelMatrix();
     }
 
     public void setScale(float s) {
         scale = s;
+        updateModelMatrix();
     }
 
     public void cleanUp() {

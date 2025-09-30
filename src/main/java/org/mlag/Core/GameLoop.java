@@ -52,8 +52,10 @@ public class GameLoop {
         Cube cube = new Cube(cubeShader);
         glEnable(GL_DEPTH_TEST);
         camera.translate(1,0,0);
-   //     glActiveTexture(GL_TEXTURE0);
 
+        Cube cube1 = new Cube(cubeShader);
+   //     glActiveTexture(GL_TEXTURE0);
+        cube1.setPosition(2,2,2);
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             TIME = (float)glfwGetTime();
@@ -77,6 +79,7 @@ public class GameLoop {
             if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) camera.move(0,-speed,0);
             //код выносим за gameLoop!!
             cube.render(camera.getViewMatrix(),camera.getProjectionMatrix(),fb);
+            cube1.render(camera.getViewMatrix(),camera.getProjectionMatrix(),fb);
 
             // texture2D.bind();
 
