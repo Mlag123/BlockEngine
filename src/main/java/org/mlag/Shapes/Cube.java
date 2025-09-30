@@ -7,25 +7,13 @@ import org.mlag.ljwgl.VBO;
 
 import java.nio.FloatBuffer;
 
-public class Cube {
-
-    private VAO vao;
-    private VBO vbo;
-    private Shader shader;
-    private float[] position = {0, 0, 0};
-    private float[] rotation = {0, 0, 0};
-    private float scale = 1.0f;
-    private Matrix4f modelMatrix;
-
-    public Cube(Shader shader){
-        this.shader = shader;
-        modelMatrix = new Matrix4f().identity() ;
-        setupMesh();
-
-
+public class Cube  extends SceneObject{
+    public Cube(Shader shader) {
+        super(shader);
     }
 
-    private void setupMesh(){
+    @Override
+    protected void setupMesh() {
         float[] vertices = {
                 // Задняя грань
                 -0.5f, -0.5f, -0.5f,
@@ -83,59 +71,6 @@ public class Cube {
         vao.setVertexCount(vertices.length/3);
     }
 
-    public void translate(float x,float y,float z){
-       // modelMatrix.translate(x,y,z);
-        position[0] +=x;
-        position[1] +=y;
-        position[2]+=z;
-        updateModelMatrix();
-    }
 
-
-    public void rotate(float angle,float ax,float ay,float az){
-        modelMatrix.rotate((float) Math.toRadians(angle),ax,ay,az);
-    }
-
-    public void render(Matrix4f viewMatrix, Matrix4f projectionMatrix, FloatBuffer fb){
-        shader.use();
-        shader.setUniformMat4f("model",modelMatrix.get(fb));
-        shader.setUniformMat4f("view",viewMatrix.get(fb));
-        shader.setUniformMat4f("projection",projectionMatrix.get(fb));
-        vao.draw();
-    }
-
-    public void setPosition(float x,float y,float z){
-        position[0] = x;
-        position[1] = y;
-        position[2] = z;
-        updateModelMatrix();
- //       modelMatrix.identity().translate(x,y,z).scale(scale);
-    }
-
-    public void updateModelMatrix() {
-        modelMatrix.identity()
-                .translate(position[0], position[1], position[2])
-                .rotateX((float)Math.toRadians(rotation[0]))
-                .rotateY((float)Math.toRadians(rotation[1]))
-                .rotateZ((float)Math.toRadians(rotation[2]))
-                .scale(scale);
-    }
-
-    public void rotate(float rx, float ry, float rz) {
-        rotation[0] += rx;
-        rotation[1] += ry;
-        rotation[2] += rz;
-        updateModelMatrix();
-    }
-
-    public void setScale(float s) {
-        scale = s;
-        updateModelMatrix();
-    }
-
-    public void cleanUp() {
-        vao.cleanUP();
-        vbo.cleanUp();
-    }
 
 }
