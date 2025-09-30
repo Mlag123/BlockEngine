@@ -33,6 +33,7 @@ public class Window {
     public void run(){
         init();
         gameLoop = new GameLoop(window);
+        gameLoop.init();
         gameLoop.loop();
 
         glfwFreeCallbacks(window);

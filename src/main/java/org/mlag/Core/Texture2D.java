@@ -2,15 +2,13 @@ package org.mlag.Core;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
-import static org.lwjgl.stb.STBImage.*;
+import static org.lwjgl.stb.STBImage.stbi_image_free;
+import static org.lwjgl.stb.STBImage.stbi_load;
 
 public class Texture2D {
     private final Logger log = LogManager.getLogger(this.getClass());
@@ -19,34 +17,31 @@ public class Texture2D {
 
 
     public Texture2D(String pathTexture) {
-
-        if (!GL.getCapabilities().OpenGL11) {
-            throw new RuntimeException("OpenGL 1.1 not supported");
+        if (!glGetBoolean(GL_TEXTURE_2D)) {
+            //throw new RuntimeException("Texture 2D not supported");
         }
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-// Поведение на краях текстуры
+        id = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, id);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            IntBuffer width = stack.mallocInt(1);
-            IntBuffer height = stack.mallocInt(1);
-            IntBuffer channels = stack.mallocInt(1);
-            ByteBuffer image = stbi_load(pathTexture, width, height, channels, 4);
-            if (image == null) {
-                throw new RuntimeException("Error reading image");
-            }
+        int[] width = new int[1], height = new int[1], nrChannels = new int[1];
 
-            id = glGenTextures();
-            glBindTexture(GL_TEXTURE_2D, id);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0), 0, GL_RGBA , GL_UNSIGNED_BYTE, image);
+        ByteBuffer data = stbi_load(pathTexture, width, height, nrChannels, 0);
+        if (data != null) {
+            int format = nrChannels[0] == 4 ? GL_RGBA : GL_RGB;
+            glTexImage2D(GL_TEXTURE_2D, 0, format, width[0], height[0], 0, format, GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D);
-     //       stbi_image_free(image);
+            stbi_image_free(data);
 
+        } else {
+            log.error("Failed to load texture : " + pathTexture);
+            throw new RuntimeException("Failed to load texture : " + pathTexture);
         }
+
     }
 
     public void bind() {

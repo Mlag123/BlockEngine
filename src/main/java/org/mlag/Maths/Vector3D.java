@@ -33,19 +33,18 @@ public class Vector3D {
             y = vector3D.getY();
             z = vector3D.getZ();
             res = (x*x+y*y+z*z);
-            res = (float) Math.sqrt((float) res);
-            return (float) Math.abs((float)res);
+            return (float) Math.sqrt((float) res);
+
         }
         System.err.println("vector is null");
         throw new NullPointerException("Vector is null");
     }
 
-    public static float getScalarVector(Vector3D vec1,Vector3D vec2,float angle){
-        float longVec1,longVec2;
-        longVec1 = longVector(vec1);
-        longVec2 = longVector(vec2);
+    public static float getScalarVector(Vector3D v1,Vector3D v2){
+        if (v1 == null || v2 == null)
+            throw new NullPointerException("One of the vectors is null");
 
-        return (longVec1*longVec2)*(float)Math.cos(angle);
+        return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
     }
     public static Vector3D normalVector(Vector3D vector3D){
         if(vector3D != null){
@@ -54,6 +53,7 @@ public class Vector3D {
             y = vector3D.getY();
             z = vector3D.getZ();
             longVec = longVector(vector3D);
+            if (longVec == 0) throw new ArithmeticException("Cannot normalize zero-length vector");
             return new Vector3D(x/longVec,y/longVec,z/longVec);
         }
         System.err.println("vector is null");
