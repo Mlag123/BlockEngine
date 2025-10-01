@@ -26,6 +26,8 @@ public class GameLoop {
     private long window = 0;
     private final Logger log = LogManager.getLogger(this.getClass());
     private float TIME = 0;
+    Camera camera = new Camera(60f,Window.WIDTH/Window.HEIGHT,0.1f,100f,2,2,2);
+
 
     public GameLoop(long window) {
         this.window = window;
@@ -42,11 +44,12 @@ public class GameLoop {
 
 
 
-
+    public Camera getCamera(){
+        return camera;
+    }
 
     public void loop() {
         FloatBuffer fb = MemoryUtil.memAllocFloat(16);
-        Camera camera = new Camera(60f,800f/600f,0.1f,100f,2,2,2);
         MouseInput mouseInput = new MouseInput();
         mouseInput.attachToWindow(window);
         Shader cubeShaderRainbow = new Shader("resources/shaders/CubeVertex.vert", "resources/shaders/CubeFrag.frag");
