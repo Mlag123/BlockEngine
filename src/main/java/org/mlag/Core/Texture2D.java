@@ -17,9 +17,7 @@ public class Texture2D {
 
 
     public Texture2D(String pathTexture) {
-        if (!glGetBoolean(GL_TEXTURE_2D)) {
-            //throw new RuntimeException("Texture 2D not supported");
-        }
+
 
         id = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, id);
@@ -27,6 +25,7 @@ public class Texture2D {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 
         int[] width = new int[1], height = new int[1], nrChannels = new int[1];
 
@@ -42,6 +41,9 @@ public class Texture2D {
             throw new RuntimeException("Failed to load texture : " + pathTexture);
         }
 
+    }
+    public void unbind() {
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     public void bind() {
