@@ -28,8 +28,9 @@ public class GameLoop {
     private float TIME = 0;
 
     public static List<SceneObject> gameObjectArrays = new ArrayList<>();
-    public static Shader shpereShader ;
-
+//    public static Shader shpereShader ;
+    public static Shader cubeGreen;
+    public static Shader cubeRed;
 
     public GameLoop(long window) {
         this.window = window;
@@ -41,12 +42,17 @@ public class GameLoop {
 
     public void init() {
         GL.createCapabilities();
-
+        cubeRed = new Shader("resources/shapes/shaders/RedCubeVert.vert","resources/shapes/shaders/RedCubeFrag.frag");
+        cubeGreen = new Shader("resources/shapes/shaders/GreenCubeVert.vert","resources/shapes/shaders/GreenCubeFrag.frag");
     }
 
 
     public void loop() {
-        shpereShader = new Shader("resources/shapes/shaders/SphereVert.vert", "resources/shapes/shaders/SphereFrag.frag");
+
+
+
+
+     //   shpereShader = new Shader("resources/shapes/shaders/SphereVert.vert", "resources/shapes/shaders/SphereFrag.frag");
 //
    //        test code
             Chunk chunk = new Chunk();
@@ -62,13 +68,13 @@ public class GameLoop {
 
         //   Cube staticCube = new Cube(staticShader);
         //     glActiveTexture(GL_TEXTURE0);
-
+/*
         Shader placeShader = new Shader("resources/shapes/shaders/PlaceVert.vert", "resources/shapes/shaders/PlaceFrag.frag");
         Place place = new Place(placeShader);
         Cube sphere = new Cube(shpereShader);
 
         place.setScale(20);
-        place.setPosition(-1, -1, -1);
+        place.setPosition(-1, -1, -1);*/
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             TIME = (float) glfwGetTime();
@@ -94,7 +100,7 @@ public class GameLoop {
             if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) camera.move(0, -speed, 0);
 
             //cube moving
-            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) sphere.translate(-0.1f, 0, 0);
+/*            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) sphere.translate(-0.1f, 0, 0);
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) sphere.translate(0.1f, 0, 0);
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) sphere.translate(0, 0.1f, 0);
             if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) sphere.translate(0, -0.1f, 0);
@@ -102,7 +108,8 @@ public class GameLoop {
                 sphere.setZeroCoordinate(true);
             }else {
                 sphere.setZeroCoordinate(false);
-            }
+            }*/
+/*
             placeShader.use();
             placeShader.setUniform1f("time", TIME);
             place.render();
@@ -110,12 +117,17 @@ public class GameLoop {
             shpereShader.use();
             sphere.render();
             sphere.updateBody(TIME);
+        cubeGreen.use();
+        cubeRed.use();
+*/
+
 
             for (int i =0;i<3;i++){
                 for(int  j = 0;j<15;j++){
                   for(int z =0;z<3;z++ ){
-                      shpereShader.use();
+                      c[i][j][z].useShader();
                       c[i][j][z].render();
+
                   }
                 }
             }

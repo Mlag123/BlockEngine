@@ -17,7 +17,11 @@ public class Chunk {
         for (int i = 0; i < w; i++) {
             for (int j = 0;j<h;j++){
                for(int w=  0;w<z;w++){
-                   chunk[i][j][w] = new Cube(GameLoop.shpereShader);
+                   if(j%2==0){
+                       chunk[i][j][w] = new Cube(GameLoop.cubeGreen);
+                   }else {
+                       chunk[i][j][w] = new Cube(GameLoop.cubeRed);
+                   }
 
                    chunk[i][j][w].setPosition(new Vector3f(0+i,0+j,0+w));
                }

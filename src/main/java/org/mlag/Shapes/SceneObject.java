@@ -16,10 +16,20 @@ public abstract class SceneObject {
     public AABBCollaider collider;
     protected VAO vao;
     protected VBO vbo;
-    protected Shader shader;
+    public  Shader shader;
     protected Matrix4f modelMatrix;
     protected float scale = 1.0f;
     public Vector3f position = new Vector3f();
+
+    public void useShader(){
+        shader.use();
+/*        if (shader.equals(GameLoop.cubeGreen)){
+            System.out.println("its green shader");
+        }else if (shader.equals(GameLoop.cubeRed)){
+            System.out.println("its red shader");
+
+        }*/
+    }
 
     public SceneObject(Shader shader,String tag_object){
         this.tag_object = tag_object;
@@ -37,14 +47,14 @@ public abstract class SceneObject {
     protected abstract void setupMesh();
 
     public void render(Matrix4f viewMatrix, Matrix4f projectionMatrix, FloatBuffer fb) {
-        shader.use();
+     //   shader.use();
         shader.setUniformMat4f("model", modelMatrix.get(fb));
         shader.setUniformMat4f("view", viewMatrix.get(fb));
         shader.setUniformMat4f("projection", projectionMatrix.get(fb));
         vao.draw();
     }
     public void render() {
-        shader.use();
+         shader.use();
         shader.setUniformMat4f("model", modelMatrix.get(Camera.getFloatBuffer()));
         shader.setUniformMat4f("view", Camera.getViewMatrix().get(Camera.getFloatBuffer()));
         shader.setUniformMat4f("projection", Camera.getProjectionMatrix().get(Camera.getFloatBuffer()));
