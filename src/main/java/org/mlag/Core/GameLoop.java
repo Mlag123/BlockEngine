@@ -50,7 +50,7 @@ public class GameLoop {
 //
    //        test code
             Chunk chunk = new Chunk();
-            Cube c[][] = chunk.generateChunk();
+            Cube c[][][] = chunk.generateChunk();
         System.out.println();
         //
         Camera camera = new Camera(60f, 800f / 600f, 0.1f, 100f, 2, 2, 2);
@@ -112,9 +112,11 @@ public class GameLoop {
             sphere.updateBody(TIME);
 
             for (int i =0;i<3;i++){
-                for(int  j = 00;j<15;j++){
-                    shpereShader.use();
-                    c[i][j].render();
+                for(int  j = 0;j<15;j++){
+                  for(int z =0;z<3;z++ ){
+                      shpereShader.use();
+                      c[i][j][z].render();
+                  }
                 }
             }
 
