@@ -12,7 +12,7 @@ public class Sphere  extends SceneObject
 
 
     public Sphere(Shader shader) {
-        super(shader);
+        super(shader,"sphere");
     }
 
     //testcode

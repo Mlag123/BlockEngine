@@ -3,14 +3,17 @@ package org.mlag.Shapes;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.mlag.Core.Camera;
+import org.mlag.Core.GameLoop;
 import org.mlag.Core.Shader;
+import org.mlag.Maths.Collaiders.AABBCollaider;
 import org.mlag.ljwgl.VAO;
 import org.mlag.ljwgl.VBO;
 
 import java.nio.FloatBuffer;
 
 public abstract class SceneObject {
-
+    private String tag_object;
+    public AABBCollaider collider;
     protected VAO vao;
     protected VBO vbo;
     protected Shader shader;
@@ -18,10 +21,17 @@ public abstract class SceneObject {
     protected float scale = 1.0f;
     public Vector3f position = new Vector3f();
 
-    public SceneObject(Shader shader){
+    public SceneObject(Shader shader,String tag_object){
+        this.tag_object = tag_object;
         this.shader  =shader;
         this.modelMatrix = new Matrix4f().identity();
+        GameLoop.gameObjectArrays.add(this);
+        System.out.println(GameLoop.gameObjectArrays.size());
         setupMesh();
+    }
+
+    public String getTag_object() {
+        return tag_object;
     }
 
     protected abstract void setupMesh();
@@ -85,9 +95,45 @@ public abstract class SceneObject {
         return position;
     }
 
+    public void updateCollide(){
+        if (collider != null) {
+            Vector3f halfSize = new Vector3f(
+                    (collider.max.x - collider.min.x) / 2f,
+                    (collider.max.y - collider.min.y) / 2f,
+                    (collider.max.z - collider.min.z) / 2f
+            );
+            collider.update(position, halfSize);
+        }
+    }
+
     public abstract void updateBody(float dt);
 
     //tescode
+    protected void initColliderFromMesh(float[] vertices) {
+        if (vertices == null || vertices.length == 0) return;
+
+        float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE, minZ = Float.MAX_VALUE;
+        float maxX = Float.MIN_VALUE, maxY = Float.MIN_VALUE, maxZ = Float.MIN_VALUE;
+
+        for (int i = 0; i < vertices.length; i += 3) {
+            float x = vertices[i];
+            float y = vertices[i + 1];
+            float z = vertices[i + 2];
+
+            if (x < minX) minX = x;
+            if (y < minY) minY = y;
+            if (z < minZ) minZ = z;
+
+            if (x > maxX) maxX = x;
+            if (y > maxY) maxY = y;
+            if (z > maxZ) maxZ = z;
+        }
+
+        Vector3f min = new Vector3f(minX, minY, minZ).add(position);
+        Vector3f max = new Vector3f(maxX, maxY, maxZ).add(position);
+
+        collider = new org.mlag.Maths.Collaiders.AABBCollaider(min, max);
+    }
 
 
 }

@@ -20,7 +20,7 @@ public class Window {
 
     private long window;
 
-    public static int WIDTH = 1280,HEIGHT = 720;
+    public static int WIDTH = 800,HEIGHT = 600;
     private String title = "BlockEngine";
     private GameLoop gameLoop;
 
@@ -62,12 +62,12 @@ public class Window {
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
         });
 
-        glfwSetFramebufferSizeCallback(window, (win, width, height) -> {
+    /*    glfwSetFramebufferSizeCallback(window, (win, width, height) -> {
             glViewport(0, 0, width, height);
             if(gameLoop != null && gameLoop.getCamera() != null){
                 gameLoop.getCamera().setAspectRatio((float)width / height);
             }
-        });
+        });*/
 
         try(MemoryStack stack = MemoryStack.stackPush()){
             IntBuffer pWidth = stack.mallocInt(1);

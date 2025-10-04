@@ -8,7 +8,7 @@ import org.mlag.ljwgl.VBO;
 
 public class Place extends SceneObject{
     public Place(Shader shader) {
-        super(shader);
+        super(shader,"place");
         placeCollaider = new Collider(this.position);
         placeCollaider.setHalfSize(new Vector3f(0.5f, 0.01f, 0.5f));
 
@@ -35,6 +35,7 @@ public class Place extends SceneObject{
         vbo.uploadData(vertices);
         vao.linkVBO(vbo, 0, 3, 3 * Float.BYTES, 0);
         vao.setVertexCount(vertices.length / 3);
+        initColliderFromMesh(vertices);
     }
 
     @Override

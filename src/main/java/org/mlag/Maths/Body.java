@@ -16,6 +16,7 @@ public class Body {
 
     public void forceZero(){
         force.zero();
+        velocity.zero();
     }
 
     public Vector3f intergrade(float dt){

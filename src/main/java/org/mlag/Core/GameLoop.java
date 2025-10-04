@@ -5,13 +5,12 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 import org.mlag.Input.MouseInput;
-import org.mlag.Shapes.Cube;
-import org.mlag.Shapes.Place;
-import org.mlag.Shapes.Sphere;
-import org.mlag.Shapes.Square;
+import org.mlag.Shapes.*;
 import org.joml.Matrix4f;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 //import static org.lwjgl.opengl.GL11.*;
@@ -28,6 +27,10 @@ public class GameLoop {
     private final Logger log = LogManager.getLogger(this.getClass());
     private float TIME = 0;
 
+    public static List<SceneObject> gameObjectArrays = new ArrayList<>();
+    public static Shader shpereShader ;
+
+
     public GameLoop(long window) {
         this.window = window;
         if (window == 0) {
@@ -43,7 +46,13 @@ public class GameLoop {
 
 
     public void loop() {
-
+        shpereShader = new Shader("resources/shapes/shaders/SphereVert.vert", "resources/shapes/shaders/SphereFrag.frag");
+//
+   //        test code
+            Chunk chunk = new Chunk();
+            Cube c[][] = chunk.generateChunk();
+        System.out.println();
+        //
         Camera camera = new Camera(60f, 800f / 600f, 0.1f, 100f, 2, 2, 2);
         MouseInput mouseInput = new MouseInput();
         mouseInput.attachToWindow(window);
@@ -56,7 +65,6 @@ public class GameLoop {
 
         Shader placeShader = new Shader("resources/shapes/shaders/PlaceVert.vert", "resources/shapes/shaders/PlaceFrag.frag");
         Place place = new Place(placeShader);
-        Shader shpereShader = new Shader("resources/shapes/shaders/SphereVert.vert", "resources/shapes/shaders/SphereFrag.frag");
         Cube sphere = new Cube(shpereShader);
 
         place.setScale(20);
@@ -102,6 +110,13 @@ public class GameLoop {
             shpereShader.use();
             sphere.render();
             sphere.updateBody(TIME);
+
+            for (int i =0;i<3;i++){
+                for(int  j = 00;j<15;j++){
+                    shpereShader.use();
+                    c[i][j].render();
+                }
+            }
 
             // texture2D.bind();
 
