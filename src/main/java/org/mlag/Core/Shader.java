@@ -2,6 +2,7 @@ package org.mlag.Core;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joml.Vector3f;
 
 import java.io.File;
 import java.io.IOException;
@@ -130,6 +131,16 @@ public class Shader {
         }else {
 
             glUniform3f(location, x, y, z);
+        }
+    }
+
+    public void setUniform3f(String name, Vector3f vector3f){
+        int location =  glGetUniformLocation(programID,name);
+        if(location ==-1){
+            log.warn("Uniform not found {}", name);
+
+        }else {
+            glUniform3f(location,vector3f.x,vector3f.y,vector3f.y);
         }
     }
     public void setUniformMat4f(String name, FloatBuffer matrix) {

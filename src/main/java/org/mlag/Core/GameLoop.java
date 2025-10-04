@@ -7,6 +7,7 @@ import org.lwjgl.system.MemoryUtil;
 import org.mlag.Input.MouseInput;
 import org.mlag.Shapes.Cube;
 import org.mlag.Shapes.Place;
+import org.mlag.Shapes.Sphere;
 import org.mlag.Shapes.Square;
 import org.joml.Matrix4f;
 
@@ -26,8 +27,6 @@ public class GameLoop {
     private long window = 0;
     private final Logger log = LogManager.getLogger(this.getClass());
     private float TIME = 0;
-    Camera camera = new Camera(60f,Window.WIDTH/Window.HEIGHT,0.1f,100f,2,2,2);
-
 
     public GameLoop(long window) {
         this.window = window;
@@ -43,73 +42,73 @@ public class GameLoop {
     }
 
 
-
-    public Camera getCamera(){
-        return camera;
-    }
-
     public void loop() {
-        FloatBuffer fb = MemoryUtil.memAllocFloat(16);
+
+        Camera camera = new Camera(60f, 800f / 600f, 0.1f, 100f, 2, 2, 2);
         MouseInput mouseInput = new MouseInput();
         mouseInput.attachToWindow(window);
-        Shader cubeShaderRainbow = new Shader("resources/shaders/CubeVertex.vert", "resources/shaders/CubeFrag.frag");
-        Shader staticShader = new Shader("resources/shaders/CubeVertexBlue.vert", "resources/shaders/CubeFragBlue.frag");
-        Cube RainbowCube = new Cube(cubeShaderRainbow);
+        //  Shader staticShader = new Shader("resources/shaders/CubeVertexBlue.vert", "resources/shaders/CubeFragBlue.frag");
         glEnable(GL_DEPTH_TEST);
-        camera.translate(1,0,0);
+        camera.translate(1, 0, 0);
 
-        Cube staticCube = new Cube(staticShader);
-   //     glActiveTexture(GL_TEXTURE0);
+        //   Cube staticCube = new Cube(staticShader);
+        //     glActiveTexture(GL_TEXTURE0);
 
-        Shader placeShader = new Shader("resources/shaders/PlaceVert.vert", "resources/shaders/PlaceFrag.frag");
+        Shader placeShader = new Shader("resources/shapes/shaders/PlaceVert.vert", "resources/shapes/shaders/PlaceFrag.frag");
         Place place = new Place(placeShader);
+        Shader shpereShader = new Shader("resources/shapes/shaders/SphereVert.vert", "resources/shapes/shaders/SphereFrag.frag");
+        Cube sphere = new Cube(shpereShader);
 
-        staticCube.setPosition(2,2,2);
-        staticCube.setScale(100);
         place.setScale(20);
-        place.setPosition(-1,-1,-1);
+        place.setPosition(-1, -1, -1);
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            TIME = (float)glfwGetTime();
-            log.info(TIME);
+            TIME = (float) glfwGetTime();
             //   glColor3f(0.5f,0.0f,0.0f);
             // Отрисовка квадрата
             mouseInput.resetDeltas();
             glfwPollEvents();
 
 
-        //    cubeAIR.setUniform1f("time",TIME);
-            camera.rotate(mouseInput.getDeltaX()*0.1f,mouseInput.getDeltaY()*0.1f);
+            //    cubeAIR.setUniform1f("time",TIME);
+            camera.rotate(mouseInput.getDeltaX() * 0.1f, mouseInput.getDeltaY() * 0.1f);
 
 
-            float speed = 0.05f;
+            float speed = 0.15f;
 
 
             //код выносим за gameLoop!!
-            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.move(0,0,speed);
-            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.move(0,0,-speed);
-            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.move(-speed,0,0);
-            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.move(speed,0,0);
-            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) camera.move(0,speed,0);
-            if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) camera.move(0,-speed,0);
-            //код выносим за gameLoop!!
-            cubeShaderRainbow.use();
-            cubeShaderRainbow.setUniform1f("time",TIME);
-            RainbowCube.render(camera.getViewMatrix(),camera.getProjectionMatrix(),fb);
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.move(0, 0, speed);
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.move(0, 0, -speed);
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.move(-speed, 0, 0);
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.move(speed, 0, 0);
+            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) camera.move(0, speed, 0);
+            if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) camera.move(0, -speed, 0);
 
+            //cube moving
+            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) sphere.translate(-0.1f, 0, 0);
+            if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) sphere.translate(0.1f, 0, 0);
+            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) sphere.translate(0, 0.1f, 0);
+            if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) sphere.translate(0, -0.1f, 0);
+            if (glfwGetKey(window,GLFW_KEY_R)==GLFW_PRESS){
+                sphere.setZeroCoordinate(true);
+            }else {
+                sphere.setZeroCoordinate(false);
+            }
             placeShader.use();
-            placeShader.setUniform1f("time",TIME);
-            place.render(camera.getViewMatrix(),camera.getProjectionMatrix(),fb);
+            placeShader.setUniform1f("time", TIME);
+            place.render();
 
-
+            shpereShader.use();
+            sphere.render();
+            sphere.updateBody(TIME);
 
             // texture2D.bind();
 
 
             glfwSwapBuffers(window);
         }
-        MemoryUtil.memFree(fb);
-
+        Camera.memFree();
     }
 
 }
