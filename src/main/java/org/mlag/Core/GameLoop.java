@@ -5,12 +5,16 @@ import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
+import org.mlag.Input.KeyboardManager;
 import org.mlag.Input.MouseInput;
+import org.mlag.Objects.Canvas.Text;
+import org.mlag.Objects.GameObjects.Cross;
 import org.mlag.Objects.GameObjects.SkyBox;
 import org.mlag.Shapes.*;
 import org.joml.Matrix4f;
 
 import java.nio.FloatBuffer;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +30,7 @@ import static org.lwjgl.opengl.GL13C.glActiveTexture;
 public class GameLoop {
 
     private Texture2D boykiserSture;
-    private long window = 0;
+    public static long window = 0;
     private final Logger log = LogManager.getLogger(this.getClass());
     private float TIME = 0;
 
@@ -35,6 +39,13 @@ public class GameLoop {
     public static Shader cubeGreen;
     public static Shader cubeRed;
     public static Shader skyboxShader;
+    public static Camera camera;
+
+    Cube testCube;
+
+    public static Shader crossShader;
+    public static Cross cross;
+    Text text = new Text();
 
     public GameLoop(long window) {
         this.window = window;
@@ -47,24 +58,30 @@ public class GameLoop {
     public void init() {
 
 
-
         GL.createCapabilities();
+        camera = new Camera(60f, 1280 / 720f, 0.1f, 100f, 2, 2, 2);
+        Camera.CheckCameraExisting(this.camera);
         System.out.println("OpenGL Version: " + glGetString(GL_VERSION));
         System.out.println("Renderer: " + glGetString(GL_RENDERER));
         System.out.println("Vendor: " + glGetString(GL_VENDOR));
-
-        cubeRed = new Shader("resources/shapes/shaders/RedCubeVert.vert","resources/shapes/shaders/RedCubeFrag.frag");
-        cubeGreen = new Shader("resources/shapes/shaders/GreenCubeVert.vert","resources/shapes/shaders/GreenCubeFrag.frag");
-        skyboxShader = new Shader("resources/shapes/shaders/SkyBoxVert.vert","resources/shapes/shaders/SkyBoxFrag.frag");
-
+        text.init();
+        cubeRed = new Shader("resources/shapes/shaders/RedCubeVert.vert", "resources/shapes/shaders/RedCubeFrag.frag");
+        cubeGreen = new Shader("resources/shapes/shaders/GreenCubeVert.vert", "resources/shapes/shaders/GreenCubeFrag.frag");
+        skyboxShader = new Shader("resources/shapes/shaders/SkyBoxVert.vert", "resources/shapes/shaders/SkyBoxFrag.frag");
+        crossShader = new Shader("resources/shapes/shaders/CrossVert.vert", "resources/shapes/shaders/CrossFrag.frag");
         boykiserSture = new Texture2D("resources/textures/SkyBox.png");
+        gameObjectInit();
+    }
+
+    public void gameObjectInit() {
+        cross = new Cross(crossShader);
+        testCube = new Cube(crossShader);
     }
 
 
     public void loop() {
 
         SkyBox skyBox = new SkyBox(skyboxShader);
-
 
 
         //   shpereShader = new Shader("resources/shapes/shaders/SphereVert.vert", "resources/shapes/shaders/SphereFrag.frag");
@@ -74,13 +91,13 @@ public class GameLoop {
         Cube c[][][] = chunk.generateChunk();
         System.out.println();
         //
-        Camera camera = new Camera(60f, 800f / 600f, 0.1f, 100f, 2, 2, 2);
         MouseInput mouseInput = new MouseInput();
         mouseInput.attachToWindow(window);
         //  Shader staticShader = new Shader("resources/shaders/CubeVertexBlue.vert", "resources/shaders/CubeFragBlue.frag");
         glEnable(GL_DEPTH_TEST);
         camera.translate(1, 0, 0);
 
+        text.print("PIDARASIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
         //   Cube staticCube = new Cube(staticShader);
         //     glActiveTexture(GL_TEXTURE0);
 /*
@@ -95,6 +112,8 @@ public class GameLoop {
             TIME = (float) glfwGetTime();
             //   glColor3f(0.5f,0.0f,0.0f);
             // Отрисовка квадрата
+            KeyboardManager.cameraMove();
+
             mouseInput.resetDeltas();
             glfwPollEvents();
 
@@ -103,29 +122,21 @@ public class GameLoop {
             camera.rotate(mouseInput.getDeltaX() * 0.1f, mouseInput.getDeltaY() * 0.1f);
 
 
-            float speed = 0.15f;
+            if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+                camera.setPosition(new Vector3f(0, 20, 0));
+            }
 
 
-            //код выносим за gameLoop!!
-            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera.move(0, 0, speed);
-            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera.move(0, 0, -speed);
-            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera.move(-speed, 0, 0);
-            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera.move(speed, 0, 0);
-            if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) camera.move(0, speed, 0);
-            if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) camera.move(0, -speed, 0);
-
-
-            if(glfwGetKey(window,GLFW_KEY_R)==GLFW_PRESS){
-                for (int i =0;i<5;i++){
-                    for(int  j = 0;j<16;j++){
-                        for(int z =0;z<5;z++ ){
+            if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+                for (int i = 0; i < 5; i++) {
+                    for (int j = 0; j < 16; j++) {
+                        for (int z = 0; z < 5; z++) {
                             Vector3f pos;
-                            float  rand = (float) (Math.random()%3*100)+j;
-                            float offset_x,offset_z;
-                            offset_x = (float) Math.random()*4+i;
-                            offset_z = (float) Math.random()*3+z;
-                            pos = new Vector3f(offset_x,rand,offset_z);
-
+                            float rand = (float) (Math.random() % 3 * 100) + j;
+                            float offset_x, offset_z;
+                            offset_x = (float) Math.random() * 4 + i;
+                            offset_z = (float) Math.random() * 3 + z;
+                            pos = new Vector3f(offset_x, rand, offset_z);
 
 
                             c[i][j][z].setPosition(pos);
@@ -135,14 +146,13 @@ public class GameLoop {
                 }
             }
 
-            if(glfwGetKey(window,GLFW_KEY_C)==GLFW_PRESS){
-                for (int i =0;i<5;i++){
-                    for(int  j = 0;j<16;j++){
-                        for(int z =0;z<5;z++ ){
+            if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
+                for (int i = 0; i < 5; i++) {
+                    for (int j = 0; j < 16; j++) {
+                        for (int z = 0; z < 5; z++) {
 
 
-
-                            c[i][j][z].setPosition(0+i,0+j,0+z);
+                            c[i][j][z].setPosition(0 + i, 0 + j, 0 + z);
 
                         }
                     }
@@ -150,12 +160,11 @@ public class GameLoop {
             }
 
 
-
             skyBox.setPosition(camera.getPosition());
 
-            for (int i =0;i<5;i++){
-                for(int  j = 0;j<16;j++){
-                    for(int z =0;z<5;z++ ){
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 16; j++) {
+                    for (int z = 0; z < 5; z++) {
                         c[i][j][z].useShader();
                         c[i][j][z].render();
 
@@ -168,8 +177,30 @@ public class GameLoop {
             skyBox.render();
             boykiserSture.unbind();
 
+
+            //cross.useShader();
+            //cross.setScale(0.1f);
+            cross.rotateForCam(mouseInput.getDeltaX(),mouseInput.getDeltaY());
+            cross.setPosition(camera.getPosition());
+            cross.render2D();
             // texture2D.bind();
 
+
+
+            if(KeyboardManager.getKeyPress(GLFW_KEY_X)){
+                testCube.rotate(mouseInput.getDeltaX(),new Vector3f(0f,1,0));
+                testCube.rotate(mouseInput.getDeltaY(),new Vector3f(0f,0,1));
+
+            }
+            if(KeyboardManager.getKeyPress(GLFW_KEY_Z)){
+                testCube.setPosition(0,0,0);
+            }
+
+
+            //cross.rotateX(mouseInput.getDeltaX());
+            //cross.rotateY(mouseInput.getDeltaY());
+
+            testCube.render();
 
             glfwSwapBuffers(window);
         }

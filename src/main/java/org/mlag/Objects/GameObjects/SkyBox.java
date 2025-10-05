@@ -8,6 +8,7 @@ import org.mlag.ljwgl.VBO;
 public class SkyBox extends Cube {
     public SkyBox(Shader shader) {
         super(shader);
+        setTag_object("SkyBox");
         setupMesh();
         setScale(60f);
 

@@ -20,7 +20,7 @@ public class Window {
 
     private long window;
 
-    public static int WIDTH = 800,HEIGHT = 600;
+    public static int WIDTH = 1280,HEIGHT = 720;
     private String title = "BlockEngine";
     private GameLoop gameLoop;
 

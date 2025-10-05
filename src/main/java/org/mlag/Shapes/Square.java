@@ -1,38 +1,43 @@
 package org.mlag.Shapes;
 
+import org.joml.Matrix4f;
+import org.mlag.Core.Camera;
+import org.mlag.Core.Shader;
 import org.mlag.ljwgl.VAO;
 import org.mlag.ljwgl.VBO;
 
-public class Square {
+public class Square extends SceneObject{
 
-    private VAO vao;
-    private VBO vbo;
-    float[] sqVertices = { //fixme
-            // Первый треугольник
-            -1.0f,  1.0f, 0.0f,  // верхний левый
-            1.0f,  1.0f, 0.0f,   // верхний правый
-            -1.0f, -1.0f, 0.0f,   // нижний левый
 
-            // Второй треугольник
-            1.0f,  1.0f, 0.0f,   // верхний правый
-            1.0f, -1.0f, 0.0f,   // нижний правый
-            -1.0f, -1.0f, 0.0f    // нижний левый
-    };
+    public Square(Shader shader, String tag_object) {
+        super(shader, tag_object);
+    }
 
-    public Square(){
+    @Override
+    protected void setupMesh() {
+        float[] vertices = {
+                // Передняя грань
+                -0.5f, -0.5f, 0.5f,
+                0.5f, -0.5f, 0.5f,
+                0.5f, 0.5f, 0.5f,
+                0.5f, 0.5f, 0.5f,
+                -0.5f, 0.5f, 0.5f,
+                -0.5f, -0.5f, 0.5f,
+
+        };
+
         vao = new VAO();
         vbo = new VBO();
+        vbo.uploadData(vertices);
+        vao.linkVBO(vbo, 0, 3, 3 * Float.BYTES, 0);
+        vao.setVertexCount(vertices.length / 3);
+        initColliderFromMesh(vertices);
     }
-    public void init(){
-        vbo.uploadData(sqVertices);
-        vao.linkVBO(vbo,0,3,0,0);
-        vao.linkVBO(vbo, 1, 2, 5 * Float.BYTES, 3 * Float.BYTES); //fixme
 
-        vao.setVertexCount(6);
+    @Override
+    public void updateBody(float dt) {
 
     }
-    public void draw(){
-        vao.draw();
-    }
+
 
 }

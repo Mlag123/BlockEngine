@@ -23,9 +23,10 @@ public abstract class SceneObject {
     protected Matrix4f modelMatrix;
     protected float scale = 1.0f;
     public Vector3f position = new Vector3f();
-
+    public float angle;
+    public Vector3f vecangle3f = new Vector3f();
     public void useShader(){
-      //  shader.use();
+        shader.use();
 /*        if (shader.equals(GameLoop.cubeGreen)){
             System.out.println("its green shader");
         }else if (shader.equals(GameLoop.cubeRed)){
@@ -40,12 +41,15 @@ public abstract class SceneObject {
         this.modelMatrix = new Matrix4f().identity();
         GameLoop.gameObjectArrays.add(this);
         log.info(GameLoop.gameObjectArrays.size());
-       // System.out.println(GameLoop.gameObjectArrays.size());
         setupMesh();
     }
 
     public String getTag_object() {
         return tag_object;
+    }
+
+    public void setTag_object(String tag_object) {
+        this.tag_object = tag_object;
     }
 
     protected abstract void setupMesh();
@@ -80,12 +84,57 @@ public abstract class SceneObject {
         this.modelMatrix.translate(vector3f);
     }
 
-    public void rotate(float angle, float ax, float ay, float az) {
-        modelMatrix.rotate((float)Math.toRadians(angle), ax, ay, az);
+    public void rotate(float angleDegrees, float ax, float ay, float az) {
+        this.angle = angleDegrees;
+        Vector3f axis = new Vector3f(ax,ay,az);
+        // 1. Получаем угол в радианах
+        float angleRad = (float) Math.toRadians(angleDegrees);
+
+        // 2. Сбрасываем матрицу и снова применяем позицию
+        modelMatrix.identity()
+                .translate(position)  // вернуть объект на место
+                .rotate(angleRad, axis) // повернуть относительно собственного центра
+                .scale(scale); // если использовался scale
     }
-    public void rotate(float angle,Vector3f vector3f){
-        modelMatrix.rotate((float) Math.toRadians(angle),vector3f);
+    public void rotate(float angleDegrees, Vector3f axis) {
+        this.angle = angleDegrees;
+
+        // 1. Получаем угол в радианах
+        float angleRad = (float) Math.toRadians(angleDegrees);
+
+        // 2. Сбрасываем матрицу и снова применяем позицию
+        modelMatrix.identity()
+                .translate(position)  // вернуть объект на место
+                .rotate(angleRad, axis) // повернуть относительно собственного центра
+                .scale(scale); // если использовался scale
     }
+    public void rotateX(float angleDegrees) {
+        // Вращение вокруг оси X → (1, 0, 0)
+        this.angle = angleDegrees;
+        modelMatrix.rotate(
+                (float) Math.toRadians(angleDegrees),
+                1f, 0f, 0f
+        );
+    }
+
+    public void rotateY(float angleDegrees) {
+        // Вращение вокруг оси Y → (0, 1, 0)
+        this.angle = angleDegrees;
+        modelMatrix.rotate(
+                (float) Math.toRadians(angleDegrees),
+                0f, 1f, 0f
+        );
+    }
+
+    public void rotateZ(float angleDegrees) {
+        // Вращение вокруг оси Z → (0, 0, 1)
+        this.angle = angleDegrees;
+        modelMatrix.rotate(
+                (float) Math.toRadians(angleDegrees),
+                0f, 0f, 1f
+        );
+    }
+
 
     public void setScale(float s) {
         this.scale = s;
