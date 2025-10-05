@@ -10,7 +10,7 @@ import java.util.List;
 public class Chunk {
 
 
-    private static int w = 3, h = 16,z = 3;
+    private static int w = 5, h = 16,z = 5;
     Cube chunk[][][] = new Cube[w][h][z];
     private List<Cube> blockArray = new ArrayList<>();
     public Cube[][][] generateChunk() {
@@ -22,8 +22,20 @@ public class Chunk {
                    }else {
                        chunk[i][j][w] = new Cube(GameLoop.cubeRed);
                    }
+                    Vector3f vec;
+                   float rand =0;
+                   float offset = 0;
+                   rand = (float) Math.random()*j*2;
 
-                   chunk[i][j][w].setPosition(new Vector3f(0+i,0+j,0+w));
+                   if(rand %2==0){
+                       rand = rand *(-2);
+                       offset = rand/3;
+                   }
+
+
+
+                   vec = new Vector3f((float)Math.random()*2+i,rand,(float)Math.random()*2+w);
+                   chunk[i][j][w].setPosition(vec);
                }
             }
         }

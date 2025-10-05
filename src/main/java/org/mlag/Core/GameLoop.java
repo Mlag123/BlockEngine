@@ -2,6 +2,7 @@ package org.mlag.Core;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 import org.mlag.Input.MouseInput;
@@ -99,6 +100,41 @@ public class GameLoop {
             if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) camera.move(0, speed, 0);
             if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) camera.move(0, -speed, 0);
 
+
+            if(glfwGetKey(window,GLFW_KEY_R)==GLFW_PRESS){
+                for (int i =0;i<5;i++){
+                    for(int  j = 0;j<16;j++){
+                        for(int z =0;z<5;z++ ){
+                            Vector3f pos;
+                            float  rand = (float) (Math.random()%3*100)+j;
+                            float offset_x,offset_z;
+                            offset_x = (float) Math.random()*4+i;
+                            offset_z = (float) Math.random()*3+z;
+                            pos = new Vector3f(offset_x,rand,offset_z);
+
+
+
+                            c[i][j][z].setPosition(pos);
+
+                        }
+                    }
+                }
+            }
+
+            if(glfwGetKey(window,GLFW_KEY_C)==GLFW_PRESS){
+                for (int i =0;i<5;i++){
+                    for(int  j = 0;j<16;j++){
+                        for(int z =0;z<5;z++ ){
+
+
+
+                            c[i][j][z].setPosition(0+i,0+j,0+z);
+
+                        }
+                    }
+                }
+            }
+
             //cube moving
 /*            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) sphere.translate(-0.1f, 0, 0);
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) sphere.translate(0.1f, 0, 0);
@@ -122,9 +158,9 @@ public class GameLoop {
 */
 
 
-            for (int i =0;i<3;i++){
-                for(int  j = 0;j<15;j++){
-                  for(int z =0;z<3;z++ ){
+            for (int i =0;i<5;i++){
+                for(int  j = 0;j<16;j++){
+                  for(int z =0;z<5;z++ ){
                       c[i][j][z].useShader();
                       c[i][j][z].render();
 
