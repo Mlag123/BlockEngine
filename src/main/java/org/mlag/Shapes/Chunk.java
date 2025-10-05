@@ -16,27 +16,27 @@ public class Chunk {
     public Cube[][][] generateChunk() {
         for (int i = 0; i < w; i++) {
             for (int j = 0;j<h;j++){
-               for(int w=  0;w<z;w++){
-                   if(j%2==0){
-                       chunk[i][j][w] = new Cube(GameLoop.cubeGreen);
-                   }else {
-                       chunk[i][j][w] = new Cube(GameLoop.cubeRed);
-                   }
+                for(int w=  0;w<z;w++){
+                    if(j%2==0){
+                        chunk[i][j][w] = new Cube(GameLoop.cubeGreen);
+                    }else {
+                        chunk[i][j][w] = new Cube(GameLoop.cubeRed);
+                    }
                     Vector3f vec;
-                   float rand =0;
-                   float offset = 0;
-                   rand = (float) Math.random()*j*2;
+                    float rand =0;
+                    float offset = 0;
+                    rand = (float) Math.random()*j*2;
 
-                   if(rand %2==0){
-                       rand = rand *(-2);
-                       offset = rand/3;
-                   }
+                    if(rand %2==0){
+                        rand = rand *(-2);
+                        offset = rand/3;
+                    }
 
 
 
-                   vec = new Vector3f((float)Math.random()*2+i,rand,(float)Math.random()*2+w);
-                   chunk[i][j][w].setPosition(vec);
-               }
+                    vec = new Vector3f((float)Math.random()*2+i,rand,(float)Math.random()*2+w);
+                    chunk[i][j][w].setPosition(vec);
+                }
             }
         }
         return chunk;

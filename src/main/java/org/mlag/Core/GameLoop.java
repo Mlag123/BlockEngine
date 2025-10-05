@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 import org.mlag.Input.MouseInput;
+import org.mlag.Objects.GameObjects.SkyBox;
 import org.mlag.Shapes.*;
 import org.joml.Matrix4f;
 
@@ -24,14 +25,16 @@ import static org.lwjgl.opengl.GL13C.glActiveTexture;
 
 public class GameLoop {
 
+    private Texture2D boykiserSture;
     private long window = 0;
     private final Logger log = LogManager.getLogger(this.getClass());
     private float TIME = 0;
 
     public static List<SceneObject> gameObjectArrays = new ArrayList<>();
-//    public static Shader shpereShader ;
+    //    public static Shader shpereShader ;
     public static Shader cubeGreen;
     public static Shader cubeRed;
+    public static Shader skyboxShader;
 
     public GameLoop(long window) {
         this.window = window;
@@ -42,22 +45,33 @@ public class GameLoop {
     }
 
     public void init() {
+
+
+
         GL.createCapabilities();
+        System.out.println("OpenGL Version: " + glGetString(GL_VERSION));
+        System.out.println("Renderer: " + glGetString(GL_RENDERER));
+        System.out.println("Vendor: " + glGetString(GL_VENDOR));
+
         cubeRed = new Shader("resources/shapes/shaders/RedCubeVert.vert","resources/shapes/shaders/RedCubeFrag.frag");
         cubeGreen = new Shader("resources/shapes/shaders/GreenCubeVert.vert","resources/shapes/shaders/GreenCubeFrag.frag");
+        skyboxShader = new Shader("resources/shapes/shaders/SkyBoxVert.vert","resources/shapes/shaders/SkyBoxFrag.frag");
+
+        boykiserSture = new Texture2D("resources/textures/SkyBox.png");
     }
 
 
     public void loop() {
 
+        SkyBox skyBox = new SkyBox(skyboxShader);
 
 
 
-     //   shpereShader = new Shader("resources/shapes/shaders/SphereVert.vert", "resources/shapes/shaders/SphereFrag.frag");
+        //   shpereShader = new Shader("resources/shapes/shaders/SphereVert.vert", "resources/shapes/shaders/SphereFrag.frag");
 //
-   //        test code
-            Chunk chunk = new Chunk();
-            Cube c[][][] = chunk.generateChunk();
+        //        test code
+        Chunk chunk = new Chunk();
+        Cube c[][][] = chunk.generateChunk();
         System.out.println();
         //
         Camera camera = new Camera(60f, 800f / 600f, 0.1f, 100f, 2, 2, 2);
@@ -135,38 +149,24 @@ public class GameLoop {
                 }
             }
 
-            //cube moving
-/*            if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) sphere.translate(-0.1f, 0, 0);
-            if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) sphere.translate(0.1f, 0, 0);
-            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) sphere.translate(0, 0.1f, 0);
-            if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) sphere.translate(0, -0.1f, 0);
-            if (glfwGetKey(window,GLFW_KEY_R)==GLFW_PRESS){
-                sphere.setZeroCoordinate(true);
-            }else {
-                sphere.setZeroCoordinate(false);
-            }*/
-/*
-            placeShader.use();
-            placeShader.setUniform1f("time", TIME);
-            place.render();
 
-            shpereShader.use();
-            sphere.render();
-            sphere.updateBody(TIME);
-        cubeGreen.use();
-        cubeRed.use();
-*/
 
+            skyBox.setPosition(camera.getPosition());
 
             for (int i =0;i<5;i++){
                 for(int  j = 0;j<16;j++){
-                  for(int z =0;z<5;z++ ){
-                      c[i][j][z].useShader();
-                      c[i][j][z].render();
+                    for(int z =0;z<5;z++ ){
+                        c[i][j][z].useShader();
+                        c[i][j][z].render();
 
-                  }
+                    }
                 }
             }
+
+            boykiserSture.bind();
+            skyBox.useShader();
+            skyBox.render();
+            boykiserSture.unbind();
 
             // texture2D.bind();
 

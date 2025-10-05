@@ -1,5 +1,7 @@
 package org.mlag.Shapes;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.mlag.Core.Camera;
@@ -12,6 +14,7 @@ import org.mlag.ljwgl.VBO;
 import java.nio.FloatBuffer;
 
 public abstract class SceneObject {
+    private  final Logger log = LogManager.getLogger(SceneObject.class);
     private String tag_object;
     public AABBCollaider collider;
     protected VAO vao;
@@ -22,7 +25,7 @@ public abstract class SceneObject {
     public Vector3f position = new Vector3f();
 
     public void useShader(){
-        shader.use();
+      //  shader.use();
 /*        if (shader.equals(GameLoop.cubeGreen)){
             System.out.println("its green shader");
         }else if (shader.equals(GameLoop.cubeRed)){
@@ -36,7 +39,8 @@ public abstract class SceneObject {
         this.shader  =shader;
         this.modelMatrix = new Matrix4f().identity();
         GameLoop.gameObjectArrays.add(this);
-        System.out.println(GameLoop.gameObjectArrays.size());
+        log.info(GameLoop.gameObjectArrays.size());
+       // System.out.println(GameLoop.gameObjectArrays.size());
         setupMesh();
     }
 

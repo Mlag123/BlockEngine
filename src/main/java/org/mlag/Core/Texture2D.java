@@ -29,7 +29,7 @@ public class Texture2D {
 
         int[] width = new int[1], height = new int[1], nrChannels = new int[1];
 
-        ByteBuffer data = stbi_load(pathTexture, width, height, nrChannels, 0);
+        ByteBuffer data = stbi_load(pathTexture, width, height, nrChannels, 3);
         if (data != null) {
             int format = nrChannels[0] == 4 ? GL_RGBA : GL_RGB;
             glTexImage2D(GL_TEXTURE_2D, 0, format, width[0], height[0], 0, format, GL_UNSIGNED_BYTE, data);
