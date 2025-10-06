@@ -53,7 +53,7 @@ public class GameLoop {
 
     Shader shadGreenVec, shadBlueVec, shadRedVec;
     Cube RedVecCube, BlueVecCube, GreenVecCube;
-
+    Sphere sphere;
 
     public GameLoop(long window) {
         this.window = window;
@@ -74,6 +74,7 @@ public class GameLoop {
         objectMangers.readBlocks();
 
         blocks = objectMangers.getBlocks();
+        initShader();
         camera = new Camera(60f, 1280 / 720f, 0.1f, 100f, 2, 2, 2);
         Camera.CheckCameraExisting(this.camera);
         System.out.println("OpenGL Version: " + glGetString(GL_VERSION));
@@ -86,6 +87,13 @@ public class GameLoop {
         System.out.println("NanoVG ID = " + text.id);
 
 
+
+
+        gameObjectInit();
+    }
+
+
+    public void initShader(){
         cubeRed = new Shader("resources/shapes/shaders/RedCubeVert.vert", "resources/shapes/shaders/RedCubeFrag.frag");
         cubeGreen = new Shader("resources/shapes/shaders/GreenCubeVert.vert", "resources/shapes/shaders/GreenCubeFrag.frag");
         skyboxShader = new Shader("resources/shapes/shaders/SkyBoxVert.vert", "resources/shapes/shaders/SkyBoxFrag.frag");
@@ -95,8 +103,6 @@ public class GameLoop {
         shadGreenVec = new Shader("resources/shapes/shaders/GreenVec.vert", "resources/shapes/shaders/GreenVec.frag");
         shadRedVec = new Shader("resources/shapes/shaders/RedVec.vert", "resources/shapes/shaders/RedVec.frag");
         shadBlueVec = new Shader("resources/shapes/shaders/BlueVec.vert", "resources/shapes/shaders/BlueVec.frag");
-
-        gameObjectInit();
     }
 
 
@@ -118,9 +124,14 @@ public class GameLoop {
         GreenVecCube = new Cube(shadGreenVec);
         BlueVecCube = new Cube(shadBlueVec);
         testMesh = new Test(crossShader);
+        sphere = new Sphere(shadBlueVec);
 
     }
 
+
+    public void draw(){
+        sphere.render();
+    }
 
     public void loop() {
         SkyBox skyBox = new SkyBox(skyboxShader);
@@ -244,6 +255,9 @@ public class GameLoop {
 
             testCube.render();
             testMesh.render();
+
+            sphere.setPosition(-2,0,0);
+            draw();
 
             text.print("CPU Load: " + CpuMonitor.getCpuLoad());
             text.setPosition(20, 60);

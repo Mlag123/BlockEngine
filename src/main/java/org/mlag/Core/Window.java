@@ -7,6 +7,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
+import org.mlag.Logic.ResourceManager;
 
 import java.nio.IntBuffer;
 
@@ -36,6 +37,7 @@ public class Window {
         gameLoop.init();
         gameLoop.loop();
 
+        ResourceManager.cleanupAll();
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
         glfwTerminate();

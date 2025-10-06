@@ -3,17 +3,21 @@ package org.mlag.ljwgl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.system.MemoryUtil;
+import org.mlag.Logic.Disposable;
+import org.mlag.Logic.ResourceManager;
 
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL15C.*;
 
-public class VBO {
+public class VBO implements Disposable {
     private int vboID = 0;
     private boolean dispose = false;
     private final Logger log = LogManager.getLogger(this.getClass());
     public VBO() {
         vboID = glGenBuffers();
+        ResourceManager.register(this);
+
         //     glBindBuffer(GL_ARRAY_BUFFER,vboID);
     }
 
@@ -59,14 +63,16 @@ public class VBO {
 
     }
 
+/*
     public void cleanUp() {
         if (!dispose) {
             glDeleteBuffers(vboID);
             dispose = true;
         }
     }
+*/
 
-    @Override
+/*    @Override
     protected void finalize() throws Throwable {
         try {
             if(!dispose){
@@ -75,6 +81,14 @@ public class VBO {
             }
         }finally {
             super.finalize();
+        }
+    }*/
+
+    @Override
+    public void cleanUP() {
+        if (!dispose) {
+            glDeleteBuffers(vboID);
+            dispose = true;
         }
     }
 }

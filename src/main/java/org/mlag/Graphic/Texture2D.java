@@ -2,6 +2,8 @@ package org.mlag.Graphic;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mlag.Logic.Disposable;
+import org.mlag.Logic.ResourceManager;
 
 import java.nio.ByteBuffer;
 
@@ -10,7 +12,7 @@ import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
 import static org.lwjgl.stb.STBImage.stbi_image_free;
 import static org.lwjgl.stb.STBImage.stbi_load;
 
-public class Texture2D {
+public class Texture2D implements Disposable {
     private final Logger log = LogManager.getLogger(this.getClass());
 
     private int id;
@@ -40,6 +42,7 @@ public class Texture2D {
             log.error("Failed to load texture : " + pathTexture);
             throw new RuntimeException("Failed to load texture : " + pathTexture);
         }
+        ResourceManager.register(this);
 
     }
     public void unbind() {

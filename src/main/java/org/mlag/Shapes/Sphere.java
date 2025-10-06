@@ -1,9 +1,11 @@
 package org.mlag.Shapes;
 
+import org.mlag.Core.OBJLoader;
 import org.mlag.Core.Shader;
 import org.mlag.ljwgl.VAO;
 import org.mlag.ljwgl.VBO;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,68 +20,36 @@ public class Sphere  extends SceneObject
     //testcode
     @Override
     protected void setupMesh() {
-        float radius = 1.0f;
-        int sectorCount = 36;  // долготы
-        int stackCount = 18;   // широты
 
-        List<Float> vertices = new ArrayList<>();
-        List<Integer> indices = new ArrayList<>();
+        OBJLoader.Mesh m = new OBJLoader.Mesh();
+        String path = "resources/obj/sphere.obj";
 
-        for (int i = 0; i <= stackCount; i++) {
-            float stackAngle = (float) Math.PI / 2 - i * (float)Math.PI / stackCount;
-            float xy = (float) Math.cos(stackAngle);
-            float z = (float) Math.sin(stackAngle);
-
-            for (int j = 0; j <= sectorCount; j++) {
-                float sectorAngle = j * 2.0f * (float)Math.PI / sectorCount;
-
-                float x = xy * (float)Math.cos(sectorAngle);
-                float y = xy * (float)Math.sin(sectorAngle);
-
-                // позиция
-                vertices.add(x * radius);
-                vertices.add(y * radius);
-                vertices.add(z * radius);
-
-                // нормаль (единичный вектор)
-                vertices.add(x);
-                vertices.add(y);
-                vertices.add(z);
-            }
+        try {
+            m = OBJLoader.loadOBJ(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
-        for (int i = 0; i < stackCount; i++) {
-            int k1 = i * (sectorCount + 1);
-            int k2 = k1 + sectorCount + 1;
+        // Собираем все вершины в один массив
+        float[] vertices = new float[m.faces.size() * 3 * 3]; // faces * 3 вершины * 3 координаты
+        int index = 0;
 
-            for (int j = 0; j < sectorCount; j++, k1++, k2++) {
-                if (i != 0) {
-                    indices.add(k1);
-                    indices.add(k2);
-                    indices.add(k1 + 1);
-                }
-                if (i != (stackCount - 1)) {
-                    indices.add(k1 + 1);
-                    indices.add(k2);
-                    indices.add(k2 + 1);
-                }
+        for (int[] face : m.faces) {        // перебираем все треугольники
+            for (int vertexIndex : face) {  // перебираем вершины в грани
+                float[] v = m.vertices.get(vertexIndex);
+                vertices[index++] = v[0];
+                vertices[index++] = v[1];
+                vertices[index++] = v[2];
             }
         }
-
-        // Преобразуем в массивы
-        float[] vertexArray = new float[vertices.size()];
-        for (int i = 0; i < vertices.size(); i++) vertexArray[i] = vertices.get(i);
-
-        int[] indexArray = new int[indices.size()];
-        for (int i = 0; i < indices.size(); i++) indexArray[i] = indices.get(i);
-
-        // загружаем данные как в других мешах
 
         vao = new VAO();
         vbo = new VBO();
-        vbo.uploadData(vertexArray);
+        vbo.uploadData(vertices);
         vao.linkVBO(vbo, 0, 3, 3 * Float.BYTES, 0);
-        vao.setVertexCount(vertexArray.length / 3);
+        vao.setVertexCount(vertices.length / 3);
+
+        initColliderFromMesh(vertices);
     }
 
     @Override

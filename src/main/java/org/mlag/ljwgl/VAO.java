@@ -2,6 +2,8 @@ package org.mlag.ljwgl;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mlag.Logic.Disposable;
+import org.mlag.Logic.ResourceManager;
 
 import static org.lwjgl.opengl.ARBVertexArrayObject.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -9,7 +11,7 @@ import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 
-public class VAO {
+public class VAO  implements Disposable {
 
 
     private int vaoID = 0;
@@ -19,6 +21,7 @@ public class VAO {
 
     public VAO() {
         vaoID = glGenVertexArrays();
+        ResourceManager.register(this);
         //   glBindVertexArray(vaoID);
     }
 
@@ -51,14 +54,22 @@ public class VAO {
         glDrawArrays(GL_TRIANGLES,0,vertexCount);
         unBind();
     }
-    public void cleanUP(){
+/*    public void cleanUP(){
         if(!disposed){
             glDeleteVertexArrays(vaoID);
             disposed = true;
         }
+    }*/
+
+    public void cleanUP() {
+        if (!disposed) {
+            glDeleteVertexArrays(vaoID);
+            disposed = true;
+           // log.info("VAO " + vaoID + " cleaned up");
+        }
     }
 
-    @Override
+   /* @Override
     public void finalize() throws Throwable{
         try {
             if(!disposed){
@@ -68,6 +79,6 @@ public class VAO {
         }finally {
             super.finalize();
         }
-    }
+    }*/
 
 }

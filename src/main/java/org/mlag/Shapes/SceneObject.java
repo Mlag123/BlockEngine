@@ -149,9 +149,9 @@ public abstract class SceneObject {
         modelMatrix.identity().translate(x, y, z).scale(scale);
     }
 
-    public void cleanUp() {
+    public void cleanUP() {
         vao.cleanUP();
-        vbo.cleanUp();
+        vbo.cleanUP();
     }
 
     public Vector3f getPosition() {

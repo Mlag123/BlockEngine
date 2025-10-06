@@ -4,6 +4,8 @@ import com.google.errorprone.annotations.DoNotCall;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
+import org.mlag.Logic.Disposable;
+import org.mlag.Logic.ResourceManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +15,7 @@ import java.nio.file.Paths;
 
 import static org.lwjgl.opengl.GL20.*;
 
-public class Shader {
+public class Shader implements Disposable {
     private final Logger log = LogManager.getLogger(this.getClass());
 
     private int programID, vertexShaderID, fragmentShaderID;
@@ -31,6 +33,8 @@ public class Shader {
         glAttachShader(programID, fragmentShaderID);
         glLinkProgram(programID);
         checkCompileErrors(programID, "PROGRAM");
+        ResourceManager.register(this);
+
     }
 
     public Shader(String vertex, String fragment, boolean a) {
@@ -46,6 +50,8 @@ public class Shader {
         glAttachShader(programID, fragmentShaderID);
         glLinkProgram(programID);
         checkCompileErrors(programID, "PROGRAM");
+        ResourceManager.register(this);
+
     }
 
 
