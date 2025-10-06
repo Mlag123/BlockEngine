@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryUtil;
+import org.mlag.Graphic.Texture2D;
 import org.mlag.Input.KeyboardManager;
 import org.mlag.Input.MouseInput;
 import org.mlag.Logic.ObjectMangers;
@@ -14,11 +14,8 @@ import org.mlag.Objects.GameObjects.Cross;
 import org.mlag.Objects.GameObjects.SkyBox;
 import org.mlag.Objects.GameObjects.Test;
 import org.mlag.Shapes.*;
-import org.joml.Matrix4f;
 import org.mlag.Utils.CpuMonitor;
 
-import java.nio.FloatBuffer;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
