@@ -40,7 +40,7 @@ public abstract class SceneObject {
         this.shader  =shader;
         this.modelMatrix = new Matrix4f().identity();
         GameLoop.gameObjectArrays.add(this);
-        log.info(GameLoop.gameObjectArrays.size());
+
         setupMesh();
     }
 

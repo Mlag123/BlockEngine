@@ -66,7 +66,21 @@ public class OBJLoader {
     }
 
     public static void main(String[] args) {
+        Mesh m  = new Mesh();
+        String path = "resources/obj/fonar.obj";
+        try {
+            m = OBJLoader.loadOBJ(path);
 
+            for (float f[]:m.vertices){
+
+                for (int i = 0;i<f.length;i++){
+                    System.out.println(f[i]);
+                }
+
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

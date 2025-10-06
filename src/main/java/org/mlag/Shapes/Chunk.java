@@ -20,6 +20,7 @@ public class Chunk {
                 for(int w=  0;w<z;w++){
                     if(j%2==0){
                         chunk[i][j][w] = new Block(GameLoop.cubeGreen);
+
                     }else {
                         chunk[i][j][w] = new Block(GameLoop.cubeRed);
                     }
