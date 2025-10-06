@@ -24,13 +24,25 @@ public class Test extends SceneObject {
             throw new RuntimeException(e);
         }
 
-        float[] vertices = m.vertices.get(0);
+        // Собираем все вершины в один массив
+        float[] vertices = new float[m.faces.size() * 3 * 3]; // faces * 3 вершины * 3 координаты
+        int index = 0;
+
+        for (int[] face : m.faces) {        // перебираем все треугольники
+            for (int vertexIndex : face) {  // перебираем вершины в грани
+                float[] v = m.vertices.get(vertexIndex);
+                vertices[index++] = v[0];
+                vertices[index++] = v[1];
+                vertices[index++] = v[2];
+            }
+        }
 
         vao = new VAO();
         vbo = new VBO();
         vbo.uploadData(vertices);
         vao.linkVBO(vbo, 0, 3, 3 * Float.BYTES, 0);
         vao.setVertexCount(vertices.length / 3);
+
         initColliderFromMesh(vertices);
     }
 

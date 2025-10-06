@@ -17,7 +17,7 @@ public class Cube extends SceneObject {
     public Collider cubeCollader;
 
     public Cube(Shader shader) {
-        super(shader,"cube");
+        super(shader, "cube");
         cubeCollader = new Collider(this.position);
         cubeCollader.setHalfSize(new Vector3f(0.5f, 0.5f, 0.5f));
     }
@@ -94,10 +94,10 @@ public class Cube extends SceneObject {
     @Override
     public void updateBody(float dt) {
         updateCollide();
-        for(SceneObject sc :GameLoop.gameObjectArrays){
-            if (sc.getTag_object().equals("place")){
+        for (SceneObject sc : GameLoop.gameObjectArrays) {
+            if (sc.getTag_object().equals("place")) {
                 boolean hasCollied = this.collider.intersects(sc.collider);
-              //  System.out.println(hasCollied);
+                //  System.out.println(hasCollied);
             }
         }
     }

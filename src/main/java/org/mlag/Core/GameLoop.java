@@ -246,6 +246,7 @@ public class GameLoop {
             GreenVecCube.render();
 
             testCube.render();
+            testMesh.render();
 
             text.print("CPU Load: " + CpuMonitor.getCpuLoad());
             text.setPosition(20, 60);

@@ -24,12 +24,13 @@ public class OBJLoader {
 
         String line;
         while ((line = br.readLine()) != null) {
-            String[] tokens = line.split("\\s+");
-            if (tokens.length == 0) continue;
+            line = line.trim();
+            if (line.isEmpty()) continue;
 
+            String[] tokens = line.split("\\s+");
             switch (tokens[0]) {
                 case "v": // вершина
-                    mesh.vertices.add(new float[] {
+                    mesh.vertices.add(new float[]{
                             Float.parseFloat(tokens[1]),
                             Float.parseFloat(tokens[2]),
                             Float.parseFloat(tokens[3])
@@ -37,50 +38,53 @@ public class OBJLoader {
                     break;
 
                 case "vt": // UV
-                    mesh.texCoords.add(new float[] {
+                    mesh.texCoords.add(new float[]{
                             Float.parseFloat(tokens[1]),
                             Float.parseFloat(tokens[2])
                     });
                     break;
 
                 case "vn": // нормаль
-                    mesh.normals.add(new float[] {
+                    mesh.normals.add(new float[]{
                             Float.parseFloat(tokens[1]),
                             Float.parseFloat(tokens[2]),
                             Float.parseFloat(tokens[3])
                     });
                     break;
 
-                case "f": // face (треугольник или квад)
+                case "f": // грань (треугольник или квадрат)
                     int[] face = new int[tokens.length - 1];
+
                     for (int i = 1; i < tokens.length; i++) {
                         String[] parts = tokens[i].split("/");
-                        face[i-1] = Integer.parseInt(parts[0]) - 1; // индексы OBJ начинаются с 1
+                        int vertexIndex = Integer.parseInt(parts[0]) - 1; // индексы OBJ начинаются с 1
+
+                        if (vertexIndex < 0 || vertexIndex >= mesh.vertices.size()) {
+                            throw new RuntimeException("Некорректный индекс вершины: " + vertexIndex);
+                        }
+                        face[i - 1] = vertexIndex;
                     }
-                    mesh.faces.add(face);
+
+                    // если треугольник
+                    if (face.length == 3) {
+                        mesh.faces.add(face);
+                    }
+                    // если квадрат — разбиваем на два треугольника
+                    else if (face.length == 4) {
+                        mesh.faces.add(new int[]{face[0], face[1], face[2]});
+                        mesh.faces.add(new int[]{face[0], face[2], face[3]});
+                    } else {
+                        throw new RuntimeException("Грань с более чем 4 вершинами не поддерживается: " + face.length);
+                    }
                     break;
             }
         }
+
         br.close();
         return mesh;
     }
 
-    public static void main(String[] args) {
-        Mesh m  = new Mesh();
-        String path = "resources/obj/fonar.obj";
-        try {
-            m = OBJLoader.loadOBJ(path);
 
-            for (float f[]:m.vertices){
 
-                for (int i = 0;i<f.length;i++){
-                    System.out.println(f[i]);
-                }
-
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 }
