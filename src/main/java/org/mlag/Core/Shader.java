@@ -1,5 +1,6 @@
 package org.mlag.Core;
 
+import com.google.errorprone.annotations.DoNotCall;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
@@ -21,6 +22,21 @@ public class Shader {
     public Shader(String vertexPath, String fragmentPath) {
         String vertexCode = loadShaderFile(vertexPath);
         String fragmentCode = loadShaderFile(fragmentPath);
+
+        vertexShaderID = compileShader(vertexCode, GL_VERTEX_SHADER);
+        fragmentShaderID = compileShader(fragmentCode, GL_FRAGMENT_SHADER);
+
+        programID = glCreateProgram();
+        glAttachShader(programID, vertexShaderID);
+        glAttachShader(programID, fragmentShaderID);
+        glLinkProgram(programID);
+        checkCompileErrors(programID, "PROGRAM");
+    }
+
+    public Shader(String vertex, String fragment, boolean a) {
+        String vertexCode = vertex;
+        String fragmentCode = fragment;
+
 
         vertexShaderID = compileShader(vertexCode, GL_VERTEX_SHADER);
         fragmentShaderID = compileShader(fragmentCode, GL_FRAGMENT_SHADER);

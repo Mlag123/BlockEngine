@@ -7,7 +7,9 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 import org.mlag.Input.KeyboardManager;
 import org.mlag.Input.MouseInput;
+import org.mlag.Logic.ObjectMangers;
 import org.mlag.Objects.Canvas.Text;
+import org.mlag.Objects.GameObjects.Block;
 import org.mlag.Objects.GameObjects.Cross;
 import org.mlag.Objects.GameObjects.SkyBox;
 import org.mlag.Shapes.*;
@@ -33,6 +35,7 @@ public class GameLoop {
     public static long window = 0;
     private final Logger log = LogManager.getLogger(this.getClass());
     private float TIME = 0;
+    ObjectMangers objectMangers;
 
     public static List<SceneObject> gameObjectArrays = new ArrayList<>();
     //    public static Shader shpereShader ;
@@ -40,12 +43,17 @@ public class GameLoop {
     public static Shader cubeRed;
     public static Shader skyboxShader;
     public static Camera camera;
-
+    List<Block> blocks;
     Cube testCube;
 
     public static Shader crossShader;
     public static Cross cross;
     Text text = new Text();
+
+
+    Shader shadGreenVec, shadBlueVec, shadRedVec;
+    Cube RedVecCube, BlueVecCube, GreenVecCube;
+
 
     public GameLoop(long window) {
         this.window = window;
@@ -59,6 +67,11 @@ public class GameLoop {
 
 
         GL.createCapabilities();
+        objectMangers = new ObjectMangers();
+        objectMangers.init();
+        objectMangers.readBlocks();
+
+        blocks = objectMangers.getBlocks();
         camera = new Camera(60f, 1280 / 720f, 0.1f, 100f, 2, 2, 2);
         Camera.CheckCameraExisting(this.camera);
         System.out.println("OpenGL Version: " + glGetString(GL_VERSION));
@@ -70,12 +83,22 @@ public class GameLoop {
         skyboxShader = new Shader("resources/shapes/shaders/SkyBoxVert.vert", "resources/shapes/shaders/SkyBoxFrag.frag");
         crossShader = new Shader("resources/shapes/shaders/CrossVert.vert", "resources/shapes/shaders/CrossFrag.frag");
         boykiserSture = new Texture2D("resources/textures/SkyBox.png");
+
+        shadGreenVec = new Shader("resources/shapes/shaders/GreenVec.vert", "resources/shapes/shaders/GreenVec.frag");
+        shadRedVec = new Shader("resources/shapes/shaders/RedVec.vert", "resources/shapes/shaders/RedVec.frag");
+        shadBlueVec = new Shader("resources/shapes/shaders/BlueVec.vert", "resources/shapes/shaders/BlueVec.frag");
+
+
         gameObjectInit();
     }
 
     public void gameObjectInit() {
         cross = new Cross(crossShader);
         testCube = new Cube(crossShader);
+        RedVecCube = new Cube(shadRedVec);
+        GreenVecCube = new Cube(shadGreenVec);
+        BlueVecCube = new Cube(shadBlueVec);
+
     }
 
 
@@ -88,7 +111,7 @@ public class GameLoop {
 //
         //        test code
         Chunk chunk = new Chunk();
-        Cube c[][][] = chunk.generateChunk();
+        Block c[][][] = chunk.generateChunk();
         System.out.println();
         //
         MouseInput mouseInput = new MouseInput();
@@ -152,7 +175,7 @@ public class GameLoop {
                         for (int z = 0; z < 5; z++) {
 
 
-                            c[i][j][z].setPosition(0 + i, 0 + j, 0 + z);
+                            c[i][j][z].setPosition(0 + i + 3, 0 + j, 0 + z + 3);
 
                         }
                     }
@@ -180,22 +203,35 @@ public class GameLoop {
 
             //cross.useShader();
             //cross.setScale(0.1f);
-            cross.rotateForCam(mouseInput.getDeltaX(),mouseInput.getDeltaY());
+            cross.rotateForCam(mouseInput.getDeltaX(), mouseInput.getDeltaY());
             cross.setPosition(camera.getPosition());
-            cross.render2D();
+            //   cross.render2D();
             // texture2D.bind();
 
 
-
-            if(KeyboardManager.getKeyPress(GLFW_KEY_X)){
-                testCube.rotate(mouseInput.getDeltaX(),new Vector3f(0f,1,0));
-                testCube.rotate(mouseInput.getDeltaY(),new Vector3f(0f,0,1));
+            if (KeyboardManager.getKeyPress(GLFW_KEY_X)) {
+                testCube.rotate(mouseInput.getDeltaX(), new Vector3f(0f, 1, 0));
+                testCube.rotate(mouseInput.getDeltaY(), new Vector3f(0f, 0, 1));
 
             }
-            if(KeyboardManager.getKeyPress(GLFW_KEY_Z)){
-                testCube.setPosition(0,0,0);
+            if (KeyboardManager.getKeyPress(GLFW_KEY_Z)) {
+                testCube.setPosition(0, 0, 0);
             }
 
+
+            for (Block bl : blocks) {
+                bl.setPosition(0, -3, 0);
+                bl.render();
+            }
+
+
+            BlueVecCube.setPosition(0, 1, 0);
+            RedVecCube.setPosition(1, 0, 0);
+            GreenVecCube.setPosition(0, 0, 1);
+
+            BlueVecCube.render();
+            RedVecCube.render();
+            GreenVecCube.render();
 
             //cross.rotateX(mouseInput.getDeltaX());
             //cross.rotateY(mouseInput.getDeltaY());

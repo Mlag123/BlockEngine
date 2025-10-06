@@ -1,0 +1,6 @@
+{
+  "tag": "dolbaeb_tag",
+  "scale": "1.0f",
+  "texture_name": "exampleTexture",
+  "shader_name": "DolbaebShader"
+}
