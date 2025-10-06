@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
+import org.mlag.Graphic.Sun;
 import org.mlag.Graphic.Texture2D;
 import org.mlag.Input.KeyboardManager;
 import org.mlag.Input.MouseInput;
@@ -14,6 +15,7 @@ import org.mlag.Objects.GameObjects.Cross;
 import org.mlag.Objects.GameObjects.SkyBox;
 import org.mlag.Objects.GameObjects.Test;
 import org.mlag.Shapes.*;
+import org.mlag.Utils.Constants;
 import org.mlag.Utils.CpuMonitor;
 
 import java.util.ArrayList;
@@ -54,6 +56,9 @@ public class GameLoop {
     Shader shadGreenVec, shadBlueVec, shadRedVec;
     Cube RedVecCube, BlueVecCube, GreenVecCube;
     Sphere sphere;
+    Shader sunShader;
+    Sun sun;
+
 
     public GameLoop(long window) {
         this.window = window;
@@ -103,7 +108,10 @@ public class GameLoop {
         shadGreenVec = new Shader("resources/shapes/shaders/GreenVec.vert", "resources/shapes/shaders/GreenVec.frag");
         shadRedVec = new Shader("resources/shapes/shaders/RedVec.vert", "resources/shapes/shaders/RedVec.frag");
         shadBlueVec = new Shader("resources/shapes/shaders/BlueVec.vert", "resources/shapes/shaders/BlueVec.frag");
+        sunShader = new Shader(Constants.PATH_SHADERS+"/SunShader.vert",Constants.PATH_SHADERS+"/SunShader.frag");
     }
+
+
 
 
     public void fpsUpdate() {
@@ -118,6 +126,7 @@ public class GameLoop {
     }
 
     public void gameObjectInit() {
+        sun = new Sun();
         cross = new Cross(crossShader);
         testCube = new Cube(crossShader);
         RedVecCube = new Cube(shadRedVec);
@@ -206,7 +215,9 @@ public class GameLoop {
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 16; j++) {
                     for (int z = 0; z < 5; z++) {
-                        c[i][j][z].useShader();
+                         c[i][j][z].useShader();
+                        //sun.applyToShader(sunShader,c[i][j][z].modelMatrix,Camera.getViewMatrix(),Camera.getProjectionMatrix());
+
                         c[i][j][z].render();
 
                     }
@@ -256,7 +267,10 @@ public class GameLoop {
             testCube.render();
             testMesh.render();
 
-            sphere.setPosition(-2,0,0);
+           // sphere.setPosition(-2,0,0);
+
+            if (KeyboardManager.getKeyPress(GLFW_KEY_LEFT)) sphere.translate(new Vector3f(-0.1f,0,0));
+
             draw();
 
             text.print("CPU Load: " + CpuMonitor.getCpuLoad());

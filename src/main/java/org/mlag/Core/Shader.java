@@ -162,7 +162,7 @@ public class Shader implements Disposable {
             log.warn("Uniform not found {}", name);
 
         }else {
-            glUniform3f(location,vector3f.x,vector3f.y,vector3f.y);
+            glUniform3f(location,vector3f.x,vector3f.y,vector3f.z);
         }
     }
     public void setUniformMat4f(String name, FloatBuffer matrix) {

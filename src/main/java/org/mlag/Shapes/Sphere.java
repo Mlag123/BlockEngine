@@ -2,6 +2,7 @@ package org.mlag.Shapes;
 
 import org.mlag.Core.OBJLoader;
 import org.mlag.Core.Shader;
+import org.mlag.Input.KeyboardManager;
 import org.mlag.ljwgl.VAO;
 import org.mlag.ljwgl.VBO;
 

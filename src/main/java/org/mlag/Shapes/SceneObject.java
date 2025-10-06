@@ -20,7 +20,7 @@ public abstract class SceneObject {
     protected VAO vao;
     protected VBO vbo;
     public  Shader shader;
-    protected Matrix4f modelMatrix;
+    public Matrix4f modelMatrix;
     protected float scale = 1.0f;
     public Vector3f position = new Vector3f();
     public float angle;
