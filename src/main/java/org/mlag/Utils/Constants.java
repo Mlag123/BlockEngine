@@ -9,4 +9,6 @@ public class Constants {
     public static String PATH_FONTS = PATH_ROOT_RESOURCES+"fonts/";
     public static String PATH_TO_BLOCKS = PATH_ROOT_RESOURCES+"blocks/";
 
+    public static String UNDEFINED = "undefined";
+
 }

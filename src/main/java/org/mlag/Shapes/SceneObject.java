@@ -35,6 +35,10 @@ public abstract class SceneObject {
         }*/
     }
 
+    public AABBCollaider getCollider(){
+        return collider;
+    }
+
     public SceneObject(Shader shader,String tag_object){
         this.tag_object = tag_object;
         this.shader  =shader;

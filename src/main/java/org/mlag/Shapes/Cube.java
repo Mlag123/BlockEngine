@@ -14,12 +14,12 @@ import java.nio.FloatBuffer;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 public class Cube extends SceneObject {
-    public Collider cubeCollader;
+   // public Collider cubeCollader;
 
     public Cube(Shader shader) {
         super(shader, "cube");
-        cubeCollader = new Collider(this.position);
-        cubeCollader.setHalfSize(new Vector3f(0.5f, 0.5f, 0.5f));
+     //   cubeCollader = new Collider(this.position);
+       // cubeCollader.setHalfSize(new Vector3f(0.5f, 0.5f, 0.5f));
     }
 
     private Body body = new Body();
@@ -98,6 +98,9 @@ public class Cube extends SceneObject {
             if (sc.getTag_object().equals("place")) {
                 boolean hasCollied = this.collider.intersects(sc.collider);
                 //  System.out.println(hasCollied);
+            }
+            if (this.collider.intersects(sc.getCollider())) {
+                System.out.println("Cube collided with: " + sc.getTag_object());
             }
         }
     }

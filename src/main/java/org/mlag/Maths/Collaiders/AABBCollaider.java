@@ -2,6 +2,7 @@ package org.mlag.Maths.Collaiders;
 
 import org.joml.Vector3f;
 
+@Deprecated
 public class AABBCollaider {
 
     public Vector3f min,max;

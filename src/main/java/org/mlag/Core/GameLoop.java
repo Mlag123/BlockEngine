@@ -9,6 +9,8 @@ import org.mlag.Graphic.Texture2D;
 import org.mlag.Input.KeyboardManager;
 import org.mlag.Input.MouseInput;
 import org.mlag.Logic.ObjectMangers;
+import org.mlag.Maths.Collaiders.AABBCollaider;
+import org.mlag.Maths.Engine.Raycast;
 import org.mlag.Objects.Canvas.Text;
 import org.mlag.Objects.GameObjects.Block;
 import org.mlag.Objects.GameObjects.Cross;
@@ -18,13 +20,16 @@ import org.mlag.Shapes.*;
 import org.mlag.Utils.Constants;
 import org.mlag.Utils.CpuMonitor;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11C.*;
 import static org.lwjgl.opengl.GL11C.GL_DEPTH_BUFFER_BIT;
+import static org.mlag.Utils.Constants.UNDEFINED;
 
 
 public class GameLoop {
@@ -51,7 +56,7 @@ public class GameLoop {
 
     public static Shader crossShader;
     public static Cross cross;
-    Text text = new Text();
+    Text text, text_debug;
     Test testMesh;
 
     Shader shadGreenVec, shadBlueVec, shadRedVec;
@@ -91,17 +96,13 @@ public class GameLoop {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        text.init();
-        System.out.println("NanoVG ID = " + text.id);
-
-
 
 
         gameObjectInit();
     }
 
 
-    public void initShader(){
+    public void initShader() {
         cubeRed = new Shader("resources/shapes/shaders/RedCubeVert.vert", "resources/shapes/shaders/RedCubeFrag.frag");
         cubeGreen = new Shader("resources/shapes/shaders/GreenCubeVert.vert", "resources/shapes/shaders/GreenCubeFrag.frag");
         skyboxShader = new Shader("resources/shapes/shaders/SkyBoxVert.vert", "resources/shapes/shaders/SkyBoxFrag.frag");
@@ -111,11 +112,9 @@ public class GameLoop {
         shadGreenVec = new Shader("resources/shapes/shaders/GreenVec.vert", "resources/shapes/shaders/GreenVec.frag");
         shadRedVec = new Shader("resources/shapes/shaders/RedVec.vert", "resources/shapes/shaders/RedVec.frag");
         shadBlueVec = new Shader("resources/shapes/shaders/BlueVec.vert", "resources/shapes/shaders/BlueVec.frag");
-        sunShader = new Shader(Constants.PATH_SHADERS+"/SunShader.vert",Constants.PATH_SHADERS+"/SunShader.frag");
-        placeShader = new Shader(Constants.PATH_SHADERS+"/PlaceShader.vert",Constants.PATH_SHADERS+"/PlaceShader.frag");
+        sunShader = new Shader(Constants.PATH_SHADERS + "/SunShader.vert", Constants.PATH_SHADERS + "/SunShader.frag");
+        placeShader = new Shader(Constants.PATH_SHADERS + "/PlaceShader.vert", Constants.PATH_SHADERS + "/PlaceShader.frag");
     }
-
-
 
 
     public void fpsUpdate() {
@@ -129,6 +128,7 @@ public class GameLoop {
         }
     }
 
+
     public void gameObjectInit() {
         sun = new Sun();
         skyBox = new SkyBox(skyboxShader);
@@ -140,12 +140,33 @@ public class GameLoop {
         testMesh = new Test(crossShader);
         sphere = new Sphere(shadBlueVec);
         place = new Place(placeShader);
+        text = new Text();
+        text_debug = new Text();
+        text.init();
+        log.info("NanoVG ID = {}", text.id);
+        ;
+        text_debug.init();
     }
 
 
-    public void draw(){
+    public void draw() {
         sphere.render();
         place.render();
+        drawText();
+    }
+
+    public void drawText() {
+        text.print("CPU Load: " + CpuMonitor.getCpuLoad());
+        text.setPosition(20, 60);
+        text.print("FPS: " + fps);
+        text.setPosition(20, 80);
+        text.print("BlockEngine");
+        text.setPosition(20, 100);
+        text.print("Cam.x = " + camera.getPosition().x + "| Cam.y = " + camera.getPosition().y + "| Cam.z = " + camera.getPosition().z);
+        text.setPosition(20, 120);
+
+        text_debug.print("GameObjectRay:= " + UNDEFINED);
+        text_debug.setPosition(20, 140);
     }
 
     public void loop() {
@@ -220,7 +241,7 @@ public class GameLoop {
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 16; j++) {
                     for (int z = 0; z < 5; z++) {
-                         c[i][j][z].useShader();
+                        c[i][j][z].useShader();
                         //sun.applyToShader(sunShader,c[i][j][z].modelMatrix,Camera.getViewMatrix(),Camera.getProjectionMatrix());
 
                         c[i][j][z].render();
@@ -272,23 +293,15 @@ public class GameLoop {
             testCube.render();
             testMesh.render();
 
-           // sphere.setPosition(-2,0,0);
+            // sphere.setPosition(-2,0,0);
 
-            if (KeyboardManager.getKeyPress(GLFW_KEY_LEFT)) sphere.translate(new Vector3f(-0.1f,0,0));
+            if (KeyboardManager.getKeyPress(GLFW_KEY_LEFT)) sphere.translate(new Vector3f(-0.1f, 0, 0));
 
             place.setScale(100f);
-            place.setPosition(new Vector3f(0,-10,0));
+            place.setPosition(new Vector3f(0, -10, 0));
 
             draw();
 
-            text.print("CPU Load: " + CpuMonitor.getCpuLoad());
-            text.setPosition(20, 60);
-            text.print("FPS: " + fps);
-            text.setPosition(20, 80);
-            text.print("BlockEngine");
-            text.setPosition(20, 100);
-            text.print("Cam.x = "+camera.getPosition().x+"| Cam.y = "+camera.getPosition().y+"| Cam.z = "+camera.getPosition().z);
-            text.setPosition(20, 120);
 
             glfwSwapBuffers(window);
         }

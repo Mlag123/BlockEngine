@@ -52,6 +52,15 @@ public class Camera {
         ).add(position);
         viewMatrix.identity().lookAt(position, target, new Vector3f(0, 1, 0));
     }
+    public Vector3f getFront() {
+        Vector3f front = new Vector3f(
+                (float) Math.cos(Math.toRadians(pitch)) * (float) Math.cos(Math.toRadians(yaw)),
+                (float) Math.sin(Math.toRadians(pitch)),
+                (float) Math.cos(Math.toRadians(pitch)) * (float) Math.sin(Math.toRadians(yaw))
+        );
+        return front.normalize();
+    }
+
 
     public static Matrix4f getViewMatrix() {
         return viewMatrix;
