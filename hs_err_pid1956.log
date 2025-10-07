@@ -34,7 +34,7 @@ C  [ig11icd64.dll+0x8072c]
 Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
 j  org.lwjgl.opengl.GL11C.nglTexImage2D(IIIIIIIIJ)V+0
 j  org.lwjgl.opengl.GL11C.glTexImage2D(IIIIIIIILjava/nio/ByteBuffer;)V+17
-j  org.mlag.Core.Texture2D.<init>(Ljava/lang/String;)V+184
+j  org.mlag.Graphic.Texture2D.<init>(Ljava/lang/String;)V+184
 j  org.mlag.Core.GameLoop.loop()V+10
 j  org.mlag.Core.Window.run()V+23
 j  org.mlag.Main.main([Ljava/lang/String;)V+7

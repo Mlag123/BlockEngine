@@ -47,6 +47,7 @@ public class GameLoop {
     public static Camera camera;
     List<Block> blocks;
     Cube testCube;
+    SkyBox skyBox;
 
     public static Shader crossShader;
     public static Cross cross;
@@ -57,7 +58,9 @@ public class GameLoop {
     Cube RedVecCube, BlueVecCube, GreenVecCube;
     Sphere sphere;
     Shader sunShader;
+    Shader placeShader;
     Sun sun;
+    Place place;
 
 
     public GameLoop(long window) {
@@ -109,6 +112,7 @@ public class GameLoop {
         shadRedVec = new Shader("resources/shapes/shaders/RedVec.vert", "resources/shapes/shaders/RedVec.frag");
         shadBlueVec = new Shader("resources/shapes/shaders/BlueVec.vert", "resources/shapes/shaders/BlueVec.frag");
         sunShader = new Shader(Constants.PATH_SHADERS+"/SunShader.vert",Constants.PATH_SHADERS+"/SunShader.frag");
+        placeShader = new Shader(Constants.PATH_SHADERS+"/PlaceShader.vert",Constants.PATH_SHADERS+"/PlaceShader.frag");
     }
 
 
@@ -127,6 +131,7 @@ public class GameLoop {
 
     public void gameObjectInit() {
         sun = new Sun();
+        skyBox = new SkyBox(skyboxShader);
         cross = new Cross(crossShader);
         testCube = new Cube(crossShader);
         RedVecCube = new Cube(shadRedVec);
@@ -134,16 +139,16 @@ public class GameLoop {
         BlueVecCube = new Cube(shadBlueVec);
         testMesh = new Test(crossShader);
         sphere = new Sphere(shadBlueVec);
-
+        place = new Place(placeShader);
     }
 
 
     public void draw(){
         sphere.render();
+        place.render();
     }
 
     public void loop() {
-        SkyBox skyBox = new SkyBox(skyboxShader);
         Chunk chunk = new Chunk();
         Block c[][][] = chunk.generateChunk();
         System.out.println();
@@ -270,6 +275,9 @@ public class GameLoop {
            // sphere.setPosition(-2,0,0);
 
             if (KeyboardManager.getKeyPress(GLFW_KEY_LEFT)) sphere.translate(new Vector3f(-0.1f,0,0));
+
+            place.setScale(100f);
+            place.setPosition(new Vector3f(0,-10,0));
 
             draw();
 

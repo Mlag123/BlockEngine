@@ -11,7 +11,7 @@ public class Place extends SceneObject{
         super(shader,"place");
         placeCollaider = new Collider(this.position);
         placeCollaider.setHalfSize(new Vector3f(0.5f, 0.01f, 0.5f));
-
+        setupMesh();
     }
     public Collider placeCollaider;
 

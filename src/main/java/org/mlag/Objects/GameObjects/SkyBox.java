@@ -10,7 +10,7 @@ public class SkyBox extends Cube {
         super(shader);
         setTag_object("SkyBox");
         setupMesh();
-        setScale(60f);
+        setScale(120f);
 
     }
 
