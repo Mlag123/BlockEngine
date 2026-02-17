@@ -35,12 +35,14 @@ import static org.mlag.Utils.Constants.UNDEFINED;
 
 
 public class GameLoop {
+    private float deltaTime = 0.0f;
+    private long lastTime = System.nanoTime();
+    private long lastTimeFPS = System.nanoTime();
+
 
     private Texture2D boykiserSture;
     public static long window = 0;
     private final Logger log = LogManager.getLogger(this.getClass());
-    private float TIME = 0;
-    private long lastTime = System.nanoTime();
     private int frames = 0;
     private int fps = 0;
 
@@ -59,7 +61,7 @@ public class GameLoop {
     public static Shader crossShader;
     public static Cross cross;
     Text text, text_debug;
-    Test testMesh;
+   public static Test testMesh;
 
     Shader shadGreenVec, shadBlueVec, shadRedVec;
    public static Cube RedVecCube, BlueVecCube, GreenVecCube;
@@ -74,6 +76,17 @@ public class GameLoop {
         if (window == 0) {
             log.info("Window is not init");
             throw new RuntimeException("Window is not init");
+        }
+    }
+
+    public void updateDeltaTime() {
+        long currentTime = System.nanoTime();
+        deltaTime = (currentTime - lastTime) / 1_000_000_000.0f; // в секундах
+        lastTime = currentTime;
+
+        // Ограничиваем deltaTime, чтобы избежать больших скачков при лагах
+        if (deltaTime > 0.1f) {
+            deltaTime = 0.1f;
         }
     }
 
@@ -122,10 +135,10 @@ public class GameLoop {
         long now = System.nanoTime();
         frames++;
 
-        if (now - lastTime >= 1_000_000_000) { // прошло 1 секунда
+        if (now - lastTimeFPS >= 1_000_000_000) { // прошло 1 секунда
             fps = frames;
             frames = 0;
-            lastTime = now;
+            lastTimeFPS = now;
         }
     }
 
@@ -144,7 +157,7 @@ public class GameLoop {
         text_debug = new Text();
         text.init();
         log.info("NanoVG ID = {}", text.id);
-        ;
+
         text_debug.init();
     }
 
@@ -163,9 +176,17 @@ public class GameLoop {
         text.setPosition(20, 100);
         text.print("Cam.x = " + camera.getPosition().x + "| Cam.y = " + camera.getPosition().y + "| Cam.z = " + camera.getPosition().z);
         text.setPosition(20, 120);
+        text.print("DeltaTime = "+deltaTime);
+        text.setPosition(20,140);
 
         text_debug.print("GameObjectRay:= " + UNDEFINED);
-        text_debug.setPosition(20, 140);
+        text_debug.setPosition(20, 160);
+    }
+
+
+    public void updateBodyied(float dt){
+        RedVecCube.updateBody(dt);
+        place.updateBody(dt);
     }
 
     public void loop() {
@@ -179,19 +200,24 @@ public class GameLoop {
         camera.translate(1, 0, 0);
 
         log.info("Game object count:= {}", GameLoop.gameObjectArrays.size());
+        RedVecCube.setPosition(0, -1, 0);
 
 
         while (!glfwWindowShouldClose(window)) {
             //     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            updateDeltaTime();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             fpsUpdate();
-            TIME = (float) glfwGetTime();
+            updateBodyied(deltaTime);
+            //TIME = (float) glfwGetTime();
 
             KeyboardManager.cameraMove();
             KeyboardManager.moveRedCube();
 
             mouseInput.resetDeltas();
             glfwPollEvents();
+
+
 
 
             camera.rotate(mouseInput.getDeltaX() * 0.1f, mouseInput.getDeltaY() * 0.1f);
@@ -255,6 +281,7 @@ public class GameLoop {
             boykiserSture.unbind();
 
 
+
             cross.rotateForCam(mouseInput.getDeltaX(), mouseInput.getDeltaY());
             cross.setPosition(camera.getPosition());
 
@@ -280,13 +307,11 @@ public class GameLoop {
                 }
             }
 
-            RedVecCube.collider.setPosition(RedVecCube.position,1f,1f,1f);
-            boolean a = AABB.intersects(RedVecCube.collider,testMesh.collider);
 
-            System.out.println(a);
+
+
 
             BlueVecCube.setPosition(0, 1, 0);
-            //RedVecCube.setPosition(1, 0, 0);
        //     GreenVecCube.setPosition(0, 0, 1);
 
             BlueVecCube.render();

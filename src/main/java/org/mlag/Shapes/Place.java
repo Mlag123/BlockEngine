@@ -9,11 +9,8 @@ import org.mlag.ljwgl.VBO;
 public class Place extends SceneObject{
     public Place(Shader shader) {
         super(shader,"place");
-        placeCollaider = new Collider(this.position);
-        placeCollaider.setHalfSize(new Vector3f(0.5f, 0.01f, 0.5f));
         setupMesh();
     }
-    public Collider placeCollaider;
 
 
 
@@ -40,6 +37,6 @@ public class Place extends SceneObject{
 
     @Override
     public void updateBody(float dt) {
-
+    // this.collider.setPosition(this.position,1f,1f,1f);
     }
 }

@@ -37,7 +37,6 @@ public class AABB {
     public boolean intersects(AABB other) {
         return intersects(this, other);
     }
-
     public void setPosition(Vector3f vec, float sizeX, float sizeY, float sizeZ) {
         float halfX = sizeX / 2.0f;
         float halfY = sizeY / 2.0f;

@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 import org.mlag.Core.GameLoop;
 import org.mlag.Core.Shader;
 import org.mlag.Maths.Body;
+import org.mlag.Maths.Collaiders.AABB;
 import org.mlag.Maths.Collider;
 import org.mlag.ljwgl.VAO;
 import org.mlag.ljwgl.VBO;
@@ -93,18 +94,16 @@ public class Cube extends SceneObject {
 
     @Override
     public void updateBody(float dt) {
-        updateCollide();
+
+/*
+        Vector3f pos = this.position;
+
+        this.collider.setPosition(this.position,1f,1f,1f);
+        boolean a = AABB.intersects(this.collider,GameLoop.place.collider);
+*/
 
 
-   /*     for (SceneObject sc : GameLoop.gameObjectArrays) {
-            if (sc.getTag_object().equals("place")) {
-                boolean hasCollied = this.collider.intersects(sc.collider);
-                //  System.out.println(hasCollied);
-            }
-            if (this.collider.intersects(sc.getCollider())) {
-                System.out.println("Cube collided with: " + sc.getTag_object());
-            }
-        }*/
+
     }
 
 

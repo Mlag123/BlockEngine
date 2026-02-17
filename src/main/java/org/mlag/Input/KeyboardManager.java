@@ -27,11 +27,11 @@ public class KeyboardManager {
 
 
     public static void moveRedCube(){
-        if (getKeyPress(GLFW_KEY_UP)) RedVecCube.translate(new Vector3f(0,speed,0));
-        if (getKeyPress(GLFW_KEY_DOWN)) RedVecCube.translate(new Vector3f(0,-speed,0));
+        if (getKeyPress(GLFW_KEY_UP)) RedVecCube.moveObjectFromCollider(new Vector3f(0,speed,0),GameLoop.place.collider);
+        if (getKeyPress(GLFW_KEY_DOWN)) RedVecCube.moveObjectFromCollider(new Vector3f(0,-speed,0),GameLoop.place.collider);
 
-        if (getKeyPress(GLFW_KEY_LEFT)) RedVecCube.translate(0,0,-speed);
-        if (getKeyPress(GLFW_KEY_RIGHT)) RedVecCube.translate(0,0,speed);
+        if (getKeyPress(GLFW_KEY_LEFT)) RedVecCube.moveObjectFromCollider(new Vector3f(0,0,-speed),GameLoop.place.collider);
+        if (getKeyPress(GLFW_KEY_RIGHT)) RedVecCube.moveObjectFromCollider(new Vector3f(0,0,speed),GameLoop.place.collider);
     }
 
 
