@@ -50,7 +50,7 @@ public class Sphere  extends SceneObject
         vao.linkVBO(vbo, 0, 3, 3 * Float.BYTES, 0);
         vao.setVertexCount(vertices.length / 3);
 
-        initColliderFromMesh(vertices);
+
     }
 
     @Override

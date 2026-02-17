@@ -77,7 +77,7 @@ public class SkyBox extends Cube {
         vao.linkVBO(vbo, 1, 2, 5 * Float.BYTES, 3 * Float.BYTES);
 
         vao.setVertexCount(vertices.length / 5);
-        initColliderFromMesh(vertices);
+    //    initColliderFromMesh(vertices);
     }
 
 }

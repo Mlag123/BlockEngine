@@ -1,5 +1,6 @@
 package org.mlag.Input;
 
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.mlag.Core.GameLoop;
 import org.mlag.Core.Window;
@@ -10,6 +11,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.mlag.Core.GameLoop.RedVecCube;
 import static org.mlag.Core.GameLoop.camera;
 
 public class KeyboardManager {
@@ -21,6 +23,15 @@ public class KeyboardManager {
     public static boolean getKeyPress(int key){
         if(glfwGetKey(GameLoop.window,key)==GLFW_PRESS) return true;
         return false;
+    }
+
+
+    public static void moveRedCube(){
+        if (getKeyPress(GLFW_KEY_UP)) RedVecCube.translate(new Vector3f(0,speed,0));
+        if (getKeyPress(GLFW_KEY_DOWN)) RedVecCube.translate(new Vector3f(0,-speed,0));
+
+        if (getKeyPress(GLFW_KEY_LEFT)) RedVecCube.translate(0,0,-speed);
+        if (getKeyPress(GLFW_KEY_RIGHT)) RedVecCube.translate(0,0,speed);
     }
 
 

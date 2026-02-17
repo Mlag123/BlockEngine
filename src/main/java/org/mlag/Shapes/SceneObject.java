@@ -7,6 +7,7 @@ import org.joml.Vector3f;
 import org.mlag.Core.Camera;
 import org.mlag.Core.GameLoop;
 import org.mlag.Core.Shader;
+import org.mlag.Maths.Collaiders.AABB;
 import org.mlag.Maths.Collaiders.AABBCollaider;
 import org.mlag.ljwgl.VAO;
 import org.mlag.ljwgl.VBO;
@@ -16,7 +17,6 @@ import java.nio.FloatBuffer;
 public abstract class SceneObject {
     private  final Logger log = LogManager.getLogger(SceneObject.class);
     private String tag_object;
-    public AABBCollaider collider;
     protected VAO vao;
     protected VBO vbo;
     public  Shader shader;
@@ -25,18 +25,14 @@ public abstract class SceneObject {
     public Vector3f position = new Vector3f();
     public float angle;
     public Vector3f vecangle3f = new Vector3f();
+    public AABB collider;
     public void useShader(){
         shader.use();
-/*        if (shader.equals(GameLoop.cubeGreen)){
-            System.out.println("its green shader");
-        }else if (shader.equals(GameLoop.cubeRed)){
-            System.out.println("its red shader");
-
-        }*/
     }
 
-    public AABBCollaider getCollider(){
-        return collider;
+
+    public void initCollider(float [] vertices){
+        collider = new AABB().initColliderFromMesh(vertices);
     }
 
     public SceneObject(Shader shader,String tag_object){
@@ -163,20 +159,24 @@ public abstract class SceneObject {
     }
 
     public void updateCollide(){
-        if (collider != null) {
+
+
+
+
+   /*     if (collider != null) {
             Vector3f halfSize = new Vector3f(
                     (collider.max.x - collider.min.x) / 2f,
                     (collider.max.y - collider.min.y) / 2f,
                     (collider.max.z - collider.min.z) / 2f
             );
             collider.update(position, halfSize);
-        }
+        }*/
     }
 
     public abstract void updateBody(float dt);
 
     //tescode
-    protected void initColliderFromMesh(float[] vertices) {
+/*    protected void initColliderFromMesh(float[] vertices) {
         if (vertices == null || vertices.length == 0) return;
 
         float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE, minZ = Float.MAX_VALUE;
@@ -199,8 +199,7 @@ public abstract class SceneObject {
         Vector3f min = new Vector3f(minX, minY, minZ).add(position);
         Vector3f max = new Vector3f(maxX, maxY, maxZ).add(position);
 
-        collider = new org.mlag.Maths.Collaiders.AABBCollaider(min, max);
-    }
+    }*/
 
 
 }

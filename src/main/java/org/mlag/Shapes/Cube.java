@@ -14,12 +14,11 @@ import java.nio.FloatBuffer;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 public class Cube extends SceneObject {
-   // public Collider cubeCollader;
+
 
     public Cube(Shader shader) {
         super(shader, "cube");
-     //   cubeCollader = new Collider(this.position);
-       // cubeCollader.setHalfSize(new Vector3f(0.5f, 0.5f, 0.5f));
+
     }
 
     private Body body = new Body();
@@ -81,7 +80,8 @@ public class Cube extends SceneObject {
         vbo.uploadData(vertices);
         vao.linkVBO(vbo, 0, 3, 3 * Float.BYTES, 0);
         vao.setVertexCount(vertices.length / 3);
-        initColliderFromMesh(vertices);
+
+        this.initCollider(vertices);
     }
 
     boolean isPresed = false;
@@ -94,7 +94,9 @@ public class Cube extends SceneObject {
     @Override
     public void updateBody(float dt) {
         updateCollide();
-        for (SceneObject sc : GameLoop.gameObjectArrays) {
+
+
+   /*     for (SceneObject sc : GameLoop.gameObjectArrays) {
             if (sc.getTag_object().equals("place")) {
                 boolean hasCollied = this.collider.intersects(sc.collider);
                 //  System.out.println(hasCollied);
@@ -102,7 +104,7 @@ public class Cube extends SceneObject {
             if (this.collider.intersects(sc.getCollider())) {
                 System.out.println("Cube collided with: " + sc.getTag_object());
             }
-        }
+        }*/
     }
 
 

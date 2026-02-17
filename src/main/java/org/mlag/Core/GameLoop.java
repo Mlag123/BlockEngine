@@ -9,6 +9,7 @@ import org.mlag.Graphic.Texture2D;
 import org.mlag.Input.KeyboardManager;
 import org.mlag.Input.MouseInput;
 import org.mlag.Logic.ObjectMangers;
+import org.mlag.Maths.Collaiders.AABB;
 import org.mlag.Maths.Collaiders.AABBCollaider;
 import org.mlag.Maths.Engine.Raycast;
 import org.mlag.Objects.Canvas.Text;
@@ -21,6 +22,7 @@ import org.mlag.Utils.Constants;
 import org.mlag.Utils.CpuMonitor;
 
 import javax.swing.*;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -60,12 +62,11 @@ public class GameLoop {
     Test testMesh;
 
     Shader shadGreenVec, shadBlueVec, shadRedVec;
-    Cube RedVecCube, BlueVecCube, GreenVecCube;
-    Sphere sphere;
+   public static Cube RedVecCube, BlueVecCube, GreenVecCube;
     Shader sunShader;
     Shader placeShader;
     Sun sun;
-    Place place;
+    public static Place place;
 
 
     public GameLoop(long window) {
@@ -135,10 +136,9 @@ public class GameLoop {
         cross = new Cross(crossShader);
         testCube = new Cube(crossShader);
         RedVecCube = new Cube(shadRedVec);
-        GreenVecCube = new Cube(shadGreenVec);
+      //  GreenVecCube = new Cube(shadGreenVec);
         BlueVecCube = new Cube(shadBlueVec);
         testMesh = new Test(crossShader);
-        sphere = new Sphere(shadBlueVec);
         place = new Place(placeShader);
         text = new Text();
         text_debug = new Text();
@@ -150,7 +150,6 @@ public class GameLoop {
 
 
     public void draw() {
-        sphere.render();
         place.render();
         drawText();
     }
@@ -170,8 +169,8 @@ public class GameLoop {
     }
 
     public void loop() {
-        Chunk chunk = new Chunk();
-        Block c[][][] = chunk.generateChunk();
+       // Chunk chunk = new Chunk();
+     //   Block c[][][] = chunk.generateChunk();
         System.out.println();
 
         MouseInput mouseInput = new MouseInput();
@@ -189,7 +188,7 @@ public class GameLoop {
             TIME = (float) glfwGetTime();
 
             KeyboardManager.cameraMove();
-
+            KeyboardManager.moveRedCube();
 
             mouseInput.resetDeltas();
             glfwPollEvents();
@@ -203,7 +202,7 @@ public class GameLoop {
             }
 
 
-            if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+         /*   if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 16; j++) {
                         for (int z = 0; z < 5; z++) {
@@ -236,7 +235,6 @@ public class GameLoop {
             }
 
 
-            skyBox.setPosition(camera.getPosition());
 
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 16; j++) {
@@ -248,7 +246,8 @@ public class GameLoop {
 
                     }
                 }
-            }
+            }*/
+            skyBox.setPosition(camera.getPosition());
 
             boykiserSture.bind();
             skyBox.useShader();
@@ -281,21 +280,23 @@ public class GameLoop {
                 }
             }
 
+            RedVecCube.collider.setPosition(RedVecCube.position,1f,1f,1f);
+            boolean a = AABB.intersects(RedVecCube.collider,testMesh.collider);
+
+            System.out.println(a);
 
             BlueVecCube.setPosition(0, 1, 0);
-            RedVecCube.setPosition(1, 0, 0);
-            GreenVecCube.setPosition(0, 0, 1);
+            //RedVecCube.setPosition(1, 0, 0);
+       //     GreenVecCube.setPosition(0, 0, 1);
 
             BlueVecCube.render();
             RedVecCube.render();
-            GreenVecCube.render();
+      //      GreenVecCube.render();
 
             testCube.render();
             testMesh.render();
 
-            // sphere.setPosition(-2,0,0);
 
-            if (KeyboardManager.getKeyPress(GLFW_KEY_LEFT)) sphere.translate(new Vector3f(-0.1f, 0, 0));
 
             place.setScale(100f);
             place.setPosition(new Vector3f(0, -10, 0));
