@@ -95,14 +95,6 @@ public class Cube extends SceneObject {
     @Override
     public void updateBody(float dt) {
 
-/*
-        Vector3f pos = this.position;
-
-        this.collider.setPosition(this.position,1f,1f,1f);
-        boolean a = AABB.intersects(this.collider,GameLoop.place.collider);
-*/
-
-
 
     }
 

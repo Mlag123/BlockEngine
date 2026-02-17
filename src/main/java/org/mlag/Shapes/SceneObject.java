@@ -34,6 +34,7 @@ public abstract class SceneObject {
 
     public void initCollider(float[] vertices) {
         collider = new AABB().initColliderFromMesh(vertices);
+
     }
 
     public SceneObject(Shader shader, String tag_object) {
@@ -135,12 +136,25 @@ public abstract class SceneObject {
 
     public void setScale(float s) {
         this.scale = s;
-        modelMatrix.scale(s);
+        // ПЕРЕСТРАИВАЕМ матрицу заново, а не умножаем
+        modelMatrix.identity()
+                .translate(position)
+                .scale(scale);
+
+        // Обновляем коллайдер с новым масштабом
+        updateCollider();
     }
 
     protected void updateCollider() {
         if (collider!=null){
-            collider.setPosition(this.position.x, this.position.y, this.position.z, 1f, 1f, 1f);
+            float sizeX = collider.maxX - collider.minX;
+            float sizeY = collider.maxY - collider.minY;
+            float sizeZ = collider.maxZ - collider.minZ;
+
+
+
+
+            collider.setPosition(this.position.x, this.position.y, this.position.z, sizeX,sizeY,sizeZ);
 
         }
 
@@ -153,7 +167,7 @@ public abstract class SceneObject {
     }
 
     public void setPosition(float x, float y, float z) {
-        this.position = new Vector3f(x,y,z);
+        this.position.set(x,y,z);
         modelMatrix.identity().translate(x, y, z).scale(scale);
         updateCollider();
     }
