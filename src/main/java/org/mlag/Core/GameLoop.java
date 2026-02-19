@@ -13,6 +13,7 @@ import org.mlag.Maths.Collaiders.AABB;
 import org.mlag.Maths.Collaiders.AABBCollaider;
 import org.mlag.Maths.Engine.Raycast;
 import org.mlag.Objects.Canvas.Text;
+import org.mlag.Objects.Entity.Player;
 import org.mlag.Objects.GameObjects.Block;
 import org.mlag.Objects.GameObjects.Cross;
 import org.mlag.Objects.GameObjects.SkyBox;
@@ -35,7 +36,7 @@ import static org.mlag.Utils.Constants.UNDEFINED;
 
 
 public class GameLoop {
-    private float deltaTime = 0.0f;
+    public static float deltaTime = 0.0f;
     private long lastTime = System.nanoTime();
     private long lastTimeFPS = System.nanoTime();
 
@@ -69,6 +70,8 @@ public class GameLoop {
     Shader placeShader;
     Sun sun;
     public static Place place;
+
+    public static Player player;
 
 
     public GameLoop(long window) {
@@ -153,6 +156,7 @@ public class GameLoop {
         BlueVecCube = new Cube(shadBlueVec);
         testMesh = new Test(crossShader);
         place = new Place(placeShader);
+        player = new Player(shadGreenVec);
         text = new Text();
         text_debug = new Text();
         text.init();
@@ -164,6 +168,7 @@ public class GameLoop {
 
     public void draw() {
         place.render();
+        player.render();
         drawText();
     }
 
@@ -187,6 +192,7 @@ public class GameLoop {
     public void updateBodyied(float dt){
         RedVecCube.updateBody(dt);
         place.updateBody(dt);
+        player.updateBody(dt);
     }
 
     public void loop() {
@@ -216,15 +222,15 @@ public class GameLoop {
 
             mouseInput.resetDeltas();
             glfwPollEvents();
-
-
-
-
             camera.rotate(mouseInput.getDeltaX() * 0.1f, mouseInput.getDeltaY() * 0.1f);
 
 
+
+
+
+
             if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
-                camera.setPosition(new Vector3f(0, 20, 0));
+          //      camera.setPosition(new Vector3f(0, 20, 0));
             }
 
 
@@ -308,7 +314,7 @@ public class GameLoop {
             }
 
 
-
+            System.out.println("X = "+player.position.x+" Y = "+player.position.y+ " Z= "+player.position.z);
 
 
             BlueVecCube.setPosition(0, 1, 0);

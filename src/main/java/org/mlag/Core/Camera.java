@@ -8,7 +8,7 @@ import java.nio.FloatBuffer;
 
 public class Camera {
 
-    private Vector3f position = new Vector3f(2, 2, 2);
+    public static Vector3f position = new Vector3f(2, 2, 2);
     public static Matrix4f viewMatrix = new Matrix4f();
     public static Matrix4f projectionMatrix;
     private float yaw = -45;
