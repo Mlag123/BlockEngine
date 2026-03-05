@@ -7,11 +7,12 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
+import org.mlag.Graphic.ShaderPack;
 import org.mlag.Logic.ResourceManager;
 
 import java.nio.IntBuffer;
 
-import static java.sql.Types.NULL;
+import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11C.*;
@@ -33,7 +34,11 @@ public class Window {
 
     public void run(){
         init();
-        gameLoop = new GameLoop(window);
+        GL.createCapabilities();
+        ShaderPack shaderPack = new ShaderPack();
+        Time time = new Time();
+
+        gameLoop = new GameLoop(window, shaderPack, time);
         gameLoop.init();
         gameLoop.loop();
 

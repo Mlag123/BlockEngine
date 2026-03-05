@@ -3,15 +3,12 @@ package org.mlag.Core;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL;
+import org.mlag.Graphic.ShaderPack;
 import org.mlag.Graphic.Sun;
 import org.mlag.Graphic.Texture2D;
 import org.mlag.Input.KeyboardManager;
 import org.mlag.Input.MouseInput;
 import org.mlag.Logic.ObjectMangers;
-import org.mlag.Maths.Collaiders.AABB;
-import org.mlag.Maths.Collaiders.AABBCollaider;
-import org.mlag.Maths.Engine.Raycast;
 import org.mlag.Objects.Canvas.Text;
 import org.mlag.Objects.Entity.Player;
 import org.mlag.Objects.GameObjects.Block;
@@ -19,14 +16,9 @@ import org.mlag.Objects.GameObjects.Cross;
 import org.mlag.Objects.GameObjects.SkyBox;
 import org.mlag.Objects.GameObjects.Test;
 import org.mlag.Shapes.*;
-import org.mlag.Utils.Constants;
 import org.mlag.Utils.CpuMonitor;
-
-import javax.swing.*;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -36,18 +28,9 @@ import static org.mlag.Utils.Constants.UNDEFINED;
 
 
 public class GameLoop {
-    public static float deltaTime = 0.0f;
-    private long lastTime = System.nanoTime();
-    private long lastTimeFPS = System.nanoTime();
-
-
     private Texture2D boykiserSture;
     public static long window = 0;
     private final Logger log = LogManager.getLogger(this.getClass());
-    private int frames = 0;
-    private int fps = 0;
-
-
     ObjectMangers objectMangers;
 
     public static List<SceneObject> gameObjectArrays = new ArrayList<>();
@@ -64,39 +47,28 @@ public class GameLoop {
     Text text, text_debug;
    public static Test testMesh;
 
-    Shader shadGreenVec, shadBlueVec, shadRedVec;
    public static Cube RedVecCube, BlueVecCube, GreenVecCube;
-    Shader sunShader;
-    Shader placeShader;
     Sun sun;
     public static Place place;
 
     public static Player player;
 
+    private final ShaderPack shaderPack;
+    private final Time time;
 
-    public GameLoop(long window) {
+    public GameLoop(long window, ShaderPack shaderPack, Time time) {
         this.window = window;
+        this.shaderPack = shaderPack;
+        this.time = time;
         if (window == 0) {
             log.info("Window is not init");
             throw new RuntimeException("Window is not init");
         }
     }
 
-    public void updateDeltaTime() {
-        long currentTime = System.nanoTime();
-        deltaTime = (currentTime - lastTime) / 1_000_000_000.0f; // в секундах
-        lastTime = currentTime;
-
-        // Ограничиваем deltaTime, чтобы избежать больших скачков при лагах
-        if (deltaTime > 0.1f) {
-            deltaTime = 0.1f;
-        }
-    }
-
     public void init() {
 
 
-        GL.createCapabilities();
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         objectMangers = new ObjectMangers();
@@ -104,7 +76,6 @@ public class GameLoop {
         objectMangers.readBlocks();
 
         blocks = objectMangers.getBlocks();
-        initShader();
         camera = new Camera(60f, 1280 / 720f, 0.1f, 100f, 2, 2, 2);
         Camera.CheckCameraExisting(this.camera);
         System.out.println("OpenGL Version: " + glGetString(GL_VERSION));
@@ -119,44 +90,25 @@ public class GameLoop {
     }
 
 
-    public void initShader() {
-        cubeRed = new Shader("resources/shapes/shaders/RedCubeVert.vert", "resources/shapes/shaders/RedCubeFrag.frag");
-        cubeGreen = new Shader("resources/shapes/shaders/GreenCubeVert.vert", "resources/shapes/shaders/GreenCubeFrag.frag");
-        skyboxShader = new Shader("resources/shapes/shaders/SkyBoxVert.vert", "resources/shapes/shaders/SkyBoxFrag.frag");
-        crossShader = new Shader("resources/shapes/shaders/CrossVert.vert", "resources/shapes/shaders/CrossFrag.frag");
-        boykiserSture = new Texture2D("resources/textures/SkyBox.png");
-
-        shadGreenVec = new Shader("resources/shapes/shaders/GreenVec.vert", "resources/shapes/shaders/GreenVec.frag");
-        shadRedVec = new Shader("resources/shapes/shaders/RedVec.vert", "resources/shapes/shaders/RedVec.frag");
-        shadBlueVec = new Shader("resources/shapes/shaders/BlueVec.vert", "resources/shapes/shaders/BlueVec.frag");
-        sunShader = new Shader(Constants.PATH_SHADERS + "/SunShader.vert", Constants.PATH_SHADERS + "/SunShader.frag");
-        placeShader = new Shader(Constants.PATH_SHADERS + "/PlaceShader.vert", Constants.PATH_SHADERS + "/PlaceShader.frag");
-    }
-
-
-    public void fpsUpdate() {
-        long now = System.nanoTime();
-        frames++;
-
-        if (now - lastTimeFPS >= 1_000_000_000) { // прошло 1 секунда
-            fps = frames;
-            frames = 0;
-            lastTimeFPS = now;
-        }
-    }
 
 
     public void gameObjectInit() {
         sun = new Sun();
+        cubeRed = shaderPack.cubeRed;
+        cubeGreen = shaderPack.cubeGreen;
+        skyboxShader = shaderPack.skybox;
+        crossShader = shaderPack.cross;
+
+        boykiserSture = new Texture2D("resources/textures/SkyBox.png");
         skyBox = new SkyBox(skyboxShader);
         cross = new Cross(crossShader);
         testCube = new Cube(crossShader);
-        RedVecCube = new Cube(shadRedVec);
-      //  GreenVecCube = new Cube(shadGreenVec);
-        BlueVecCube = new Cube(shadBlueVec);
+        RedVecCube = new Cube(shaderPack.redVec);
+      //  GreenVecCube = new Cube(shaderPack.greenVec);
+        BlueVecCube = new Cube(shaderPack.blueVec);
         testMesh = new Test(crossShader);
-        place = new Place(placeShader);
-        player = new Player(shadGreenVec);
+        place = new Place(shaderPack.place);
+        player = new Player(shaderPack.greenVec);
         text = new Text();
         text_debug = new Text();
         text.init();
@@ -175,13 +127,13 @@ public class GameLoop {
     public void drawText() {
         text.print("CPU Load: " + CpuMonitor.getCpuLoad());
         text.setPosition(20, 60);
-        text.print("FPS: " + fps);
+        text.print("FPS: " + time.getFps());
         text.setPosition(20, 80);
         text.print("BlockEngine");
         text.setPosition(20, 100);
         text.print("Cam.x = " + camera.getPosition().x + "| Cam.y = " + camera.getPosition().y + "| Cam.z = " + camera.getPosition().z);
         text.setPosition(20, 120);
-        text.print("DeltaTime = "+deltaTime);
+        text.print("DeltaTime = "+time.getDeltaTime());
         text.setPosition(20,140);
 
         text_debug.print("GameObjectRay:= " + UNDEFINED);
@@ -211,10 +163,9 @@ public class GameLoop {
 
         while (!glfwWindowShouldClose(window)) {
             //     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            updateDeltaTime();
+            time.update();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-            fpsUpdate();
-            updateBodyied(deltaTime);
+            updateBodyied(time.getDeltaTime());
             //TIME = (float) glfwGetTime();
 
             KeyboardManager.cameraMove();
