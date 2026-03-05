@@ -1,8 +1,7 @@
-package org.mlag.Graphic;
+package org.mlag.Render;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.mlag.Core.Shader;
 
 import java.io.*;
 import java.nio.file.Files;

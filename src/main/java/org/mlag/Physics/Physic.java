@@ -1,4 +1,4 @@
-package org.mlag.Maths;
+package org.mlag.Physics;
 
 public class Physic {
 

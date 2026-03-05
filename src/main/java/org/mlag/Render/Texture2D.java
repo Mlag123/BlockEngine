@@ -1,4 +1,4 @@
-package org.mlag.Graphic;
+package org.mlag.Render;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

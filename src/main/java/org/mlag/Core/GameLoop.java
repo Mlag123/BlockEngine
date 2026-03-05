@@ -4,14 +4,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
-import org.mlag.Graphic.Sun;
-import org.mlag.Graphic.Texture2D;
+import org.mlag.Render.Sun;
+import org.mlag.Render.Texture2D;
 import org.mlag.Input.KeyboardManager;
 import org.mlag.Input.MouseInput;
 import org.mlag.Logic.ObjectMangers;
-import org.mlag.Maths.Collaiders.AABB;
-import org.mlag.Maths.Collaiders.AABBCollaider;
-import org.mlag.Maths.Engine.Raycast;
 import org.mlag.Objects.Canvas.Text;
 import org.mlag.Objects.Entity.Player;
 import org.mlag.Objects.GameObjects.Block;
@@ -22,11 +19,8 @@ import org.mlag.Shapes.*;
 import org.mlag.Utils.Constants;
 import org.mlag.Utils.CpuMonitor;
 
-import javax.swing.*;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;

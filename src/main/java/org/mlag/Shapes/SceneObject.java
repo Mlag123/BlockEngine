@@ -7,8 +7,7 @@ import org.joml.Vector3f;
 import org.mlag.Core.Camera;
 import org.mlag.Core.GameLoop;
 import org.mlag.Core.Shader;
-import org.mlag.Maths.Collaiders.AABB;
-import org.mlag.Maths.Collaiders.AABBCollaider;
+import org.mlag.Physics.AABB.AABB;
 import org.mlag.ljwgl.VAO;
 import org.mlag.ljwgl.VBO;
 

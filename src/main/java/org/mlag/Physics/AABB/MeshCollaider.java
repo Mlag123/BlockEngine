@@ -1,4 +1,4 @@
-package org.mlag.Maths.Collaiders;
+package org.mlag.Physics.AABB;
 
 import org.joml.Vector3f;
 

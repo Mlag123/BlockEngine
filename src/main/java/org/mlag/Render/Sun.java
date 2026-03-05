@@ -1,9 +1,8 @@
-package org.mlag.Graphic;
+package org.mlag.Render;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
-import org.mlag.Core.Camera;
 import org.mlag.Core.Shader;
 
 import java.nio.FloatBuffer;

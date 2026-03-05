@@ -5,13 +5,12 @@ import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mlag.Core.Shader;
-import org.mlag.Graphic.ShaderManager;
+import org.mlag.Render.ShaderManager;
 import org.mlag.Objects.BlockJson;
 import org.mlag.Objects.GameObjects.Block;
 import org.mlag.Objects.ObjectJson;
 
 import java.io.*;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 

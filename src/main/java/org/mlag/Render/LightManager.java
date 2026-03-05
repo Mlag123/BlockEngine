@@ -1,8 +1,7 @@
-package org.mlag.Graphic;
+package org.mlag.Render;
 
 import org.joml.Vector3f;
 import org.mlag.Core.Shader;
-import org.mlag.Maths.Vector3D;
 
 public class LightManager {
     private Vector3f direction;

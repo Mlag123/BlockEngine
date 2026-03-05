@@ -1,4 +1,4 @@
-package org.mlag.Maths.Engine;
+package org.mlag.Physics;
 
 import org.joml.Vector3f;
 import org.mlag.Shapes.SceneObject;

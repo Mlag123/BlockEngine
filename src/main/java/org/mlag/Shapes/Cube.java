@@ -1,18 +1,9 @@
 package org.mlag.Shapes;
 
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.mlag.Core.GameLoop;
 import org.mlag.Core.Shader;
-import org.mlag.Maths.Body;
-import org.mlag.Maths.Collaiders.AABB;
-import org.mlag.Maths.Collider;
+import org.mlag.Physics.Body;
 import org.mlag.ljwgl.VAO;
 import org.mlag.ljwgl.VBO;
-
-import java.nio.FloatBuffer;
-
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 public class Cube extends SceneObject {
 
